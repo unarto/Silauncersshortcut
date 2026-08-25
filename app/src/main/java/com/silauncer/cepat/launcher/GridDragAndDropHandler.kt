@@ -1,10 +1,12 @@
 package com.silauncer.cepat.launcher
 
 import android.content.Context
+import android.graphics.Canvas
 import android.os.Handler
 import android.os.Looper
 import android.view.MotionEvent
 import android.view.ViewConfiguration
+import android.view.animation.OvershootInterpolator
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.silauncer.cepat.apps.AppActionHandler
@@ -56,6 +58,13 @@ class GridDragAndDropHandler(
                 if (actionState == ItemTouchHelper.ACTION_STATE_DRAG && viewHolder != null) {
                     startPos = viewHolder.bindingAdapterPosition
                     hasMoved = false
+                    viewHolder.itemView.animate()
+                        .scaleX(1.15f)
+                        .scaleY(1.15f)
+                        .alpha(0.85f)
+                        .setInterpolator(OvershootInterpolator())
+                        .setDuration(200)
+                        .start()
                 }
             }
 
@@ -66,7 +75,7 @@ class GridDragAndDropHandler(
             ): Boolean {
                 val from = viewHolder.bindingAdapterPosition
                 val to = target.bindingAdapterPosition
-                if (from != RecyclerView.NO_POSITION && to != RecyclerView.NO_POSITION) {
+                if (from != RecyclerView.NO_POSITION && to != RecyclerView.NO_POSITION && from != to) {
                     adapter.moveItem(from, to)
                     hasMoved = true
                     return true
@@ -74,10 +83,32 @@ class GridDragAndDropHandler(
                 return false
             }
 
+            override fun onChildDraw(
+                c: Canvas,
+                recyclerView: RecyclerView,
+                viewHolder: RecyclerView.ViewHolder,
+                dX: Float,
+                dY: Float,
+                actionState: Int,
+                isCurrentlyActive: Boolean
+            ) {
+                // Render view shadow/preview dengan Canvas hardware accelerated.
+                // Hindari alokasi objek baru (Bitmap/Rect) selama onChildDraw untuk mencegah jank.
+                super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive)
+            }
+
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {}
 
             override fun clearView(rv: RecyclerView, viewHolder: RecyclerView.ViewHolder) {
                 super.clearView(rv, viewHolder)
+                viewHolder.itemView.animate()
+                    .scaleX(1f)
+                    .scaleY(1f)
+                    .alpha(1f)
+                    .setInterpolator(OvershootInterpolator())
+                    .setDuration(200)
+                    .start()
+
                 if (hasMoved) {
                     val currentItems = adapter.getItems().toList()
                     coroutineScope.launch {

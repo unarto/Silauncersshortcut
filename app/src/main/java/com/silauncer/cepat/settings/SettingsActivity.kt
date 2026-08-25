@@ -1,6 +1,7 @@
 package com.silauncer.cepat.settings
 
 import android.os.Bundle
+import android.view.WindowManager
 import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
@@ -27,9 +28,11 @@ class SettingsActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        // [app/src/main/java/com/silauncer/cepat/settings/SettingsActivity.kt]: Konfigurasi transparansi window
-        // [Penjelasan]: Menyembunyikan action bar dan mengaktifkan window transparan untuk menampilkan wallpaper
+        // [app/src/main/java/com/silauncer/cepat/settings/SettingsActivity.kt]: Konfigurasi transparansi window & wallpaper
+        // [Penjelasan]: Menyembunyikan action bar dan mengaktifkan FLAG_SHOW_WALLPAPER untuk menampilkan wallpaper sistem secara langsung tanpa menembus kisi LauncherActivity
         supportActionBar?.hide()
+        @Suppress("DEPRECATION")
+        window.addFlags(WindowManager.LayoutParams.FLAG_SHOW_WALLPAPER)
         window.setBackgroundDrawableResource(android.R.color.transparent)
 
         try {

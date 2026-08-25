@@ -7,7 +7,6 @@
     <string name="settings_title">Pengaturan</string>
     <string name="settings_subtitle">Kustomisasi tata letak, ikon, dan preferensi launcher</string>
     <string name="back">Kembali</string>
-    <string name="cancel">Batal</string>
     <string name="error_app_not_found">Aplikasi tidak ditemukan: %1$s</string>
     <string name="error_cannot_open_app">Tidak dapat membuka aplikasi: %1$s</string>
     <string name="error_settings_crash">Terjadi kesalahan pengaturan: %1$s</string>

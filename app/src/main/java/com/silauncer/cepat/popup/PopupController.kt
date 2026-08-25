@@ -62,10 +62,19 @@ class PopupController(private val context: Context) {
             shareApp(appInfo.packageName)
         }
 
-        // Action: Shortcut Click
+        // [app/src/main/java/com/silauncer/cepat/popup/PopupController.kt]: Aksi Klik Shortcut
+        // [Penjelasan]: Menghitung koordinat nyata layar (Rect) dari targetView sebagai sourceBounds untuk LauncherApps.startShortcut
         smartPopupView.setOnShortcutClickListener { shortcut ->
             dismiss()
-            ShortcutLauncher.launch(context, shortcut.rawInfo, targetView.clipBounds, appInfo.user)
+            val location = IntArray(2)
+            targetView.getLocationOnScreen(location)
+            val sourceBounds = android.graphics.Rect(
+                location[0],
+                location[1],
+                location[0] + targetView.width,
+                location[1] + targetView.height
+            )
+            ShortcutLauncher.launch(context, shortcut.rawInfo, sourceBounds, appInfo.user)
         }
 
         popupWindow = PopupWindow(

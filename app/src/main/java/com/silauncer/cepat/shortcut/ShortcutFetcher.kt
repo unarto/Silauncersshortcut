@@ -26,7 +26,7 @@ object ShortcutFetcher {
 
         try {
             val launcherApps = context.getSystemService(Context.LAUNCHER_APPS_SERVICE) as? LauncherApps
-            if (launcherApps != null && launcherApps.hasShortcutHostPermission()) {
+            if (launcherApps != null) {
                 val targetUser = userHandle ?: Process.myUserHandle()
                 val query = LauncherApps.ShortcutQuery().apply {
                     setPackage(packageName)
@@ -36,7 +36,11 @@ object ShortcutFetcher {
                                 LauncherApps.ShortcutQuery.FLAG_MATCH_PINNED
                     )
                 }
-                val result = launcherApps.getShortcuts(query, targetUser)
+                val result = try {
+                    launcherApps.getShortcuts(query, targetUser)
+                } catch (e: Exception) {
+                    null
+                }
                 if (!result.isNullOrEmpty()) {
                     launcherShortcuts.addAll(result)
                 }

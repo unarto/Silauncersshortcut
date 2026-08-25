@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- [app/src/main/res/layout/item_tree_parent.xml]: Layout untuk item Parent Node dalam TreeView -->
+<!-- [Penjelasan]: Menampilkan grup parent dengan ikon, judul, deskripsi, dan panah indikator dropdown -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/container_parent"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="@dimen/spacing_medium"
+    android:layout_marginBottom="@dimen/spacing_micro"
+    android:background="@drawable/bg_settings_card_parent"
+    android:clickable="true"
+    android:focusable="true"
+    android:foreground="?attr/selectableItemBackground"
+    android:gravity="center_vertical"
+    android:minHeight="@dimen/min_touch_target_size"
+    android:orientation="horizontal"
+    android:padding="@dimen/spacing_large">
+
+    <!-- [app/src/main/res/layout/item_tree_parent.xml]: Container Ikon Kategori -->
+    <FrameLayout
+        android:id="@+id/icon_container"
+        android:layout_width="@dimen/icon_container_size"
+        android:layout_height="@dimen/icon_container_size"
+        android:background="@drawable/bg_icon_container">
+
+        <ImageView
+            android:id="@+id/img_parent_icon"
+            android:layout_width="@dimen/icon_inner_size"
+            android:layout_height="@dimen/icon_inner_size"
+            android:layout_gravity="center"
+            android:contentDescription="@null"
+            android:src="@drawable/ic_grid" />
+    </FrameLayout>
+
+    <!-- [app/src/main/res/layout/item_tree_parent.xml]: Judul & Subjudul -->
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/spacing_large"
+        android:layout_marginEnd="@dimen/spacing_medium"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tv_parent_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/text_primary"
+            android:textSize="@dimen/text_size_parent_header"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/tv_parent_description"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/spacing_micro"
+            android:textColor="@color/text_secondary"
+            android:textSize="@dimen/text_size_subtitle" />
+    </LinearLayout>
+
+    <!-- [app/src/main/res/layout/item_tree_parent.xml]: Chevron Indicator -->
+    <ImageView
+        android:id="@+id/img_chevron"
+        android:layout_width="@dimen/chevron_size"
+        android:layout_height="@dimen/chevron_size"
+        android:contentDescription="@null"
+        android:src="@drawable/ic_chevron_down" />
+
+</LinearLayout>

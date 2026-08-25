@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- [app/src/main/res/layout/item_popup_shortcut.xml]: Layout Item Shortcut Dinamis -->
+<!-- [Penjelasan]: Merender baris shortcut yang berisi ikon dan label teks -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/popup_item_height"
+    android:background="?android:attr/selectableItemBackground"
+    android:gravity="center_vertical"
+    android:orientation="horizontal"
+    android:paddingStart="@dimen/popup_padding_horizontal"
+    android:paddingEnd="@dimen/popup_padding_horizontal">
+
+    <ImageView
+        android:id="@+id/img_shortcut_icon"
+        android:layout_width="@dimen/popup_icon_size"
+        android:layout_height="@dimen/popup_icon_size"
+        android:contentDescription="@null"
+        android:scaleType="fitCenter" />
+
+    <TextView
+        android:id="@+id/tv_shortcut_label"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/spacing_medium"
+        android:layout_weight="1"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:textColor="@color/popup_text_primary"
+        android:textSize="@dimen/text_size_child_header" />
+
+</LinearLayout>

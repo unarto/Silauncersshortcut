@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- [app/src/main/res/layout/item_tree_child_action.xml]: Layout untuk Child Action Node -->
+<!-- [Penjelasan]: Menampilkan item berupa tombol/aksi klik sederhana -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/container_child_action"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="@dimen/tree_indent_depth_1"
+    android:layout_marginTop="@dimen/spacing_micro"
+    android:layout_marginEnd="@dimen/tree_indent_depth_1"
+    android:layout_marginBottom="@dimen/spacing_micro"
+    android:background="@drawable/bg_settings_card_child"
+    android:clickable="true"
+    android:focusable="true"
+    android:foreground="?attr/selectableItemBackground"
+    android:gravity="center_vertical"
+    android:minHeight="@dimen/min_touch_target_size"
+    android:orientation="horizontal"
+    android:paddingStart="@dimen/spacing_large"
+    android:paddingTop="@dimen/spacing_medium"
+    android:paddingEnd="@dimen/spacing_large"
+    android:paddingBottom="@dimen/spacing_medium">
+
+    <!-- [app/src/main/res/layout/item_tree_child_action.xml]: Judul & Subjudul Aksi -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tv_child_action_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/text_primary"
+            android:textSize="@dimen/text_size_child_header"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/tv_child_action_description"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/spacing_micro"
+            android:textColor="@color/text_secondary"
+            android:textSize="@dimen/text_size_body_small" />
+    </LinearLayout>
+
+</LinearLayout>

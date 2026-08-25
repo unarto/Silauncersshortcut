@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- [app/src/main/res/layout/item_tree_child_choice.xml]: Layout untuk Choice Option Node dalam TreeView -->
+<!-- [Penjelasan]: Menampilkan opsi pilihan single-choice dengan indentasi tingkat 2 dan indikator centang aktif -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/container_child_choice"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="@dimen/tree_indent_depth_2"
+    android:layout_marginTop="@dimen/spacing_micro"
+    android:layout_marginEnd="@dimen/tree_indent_depth_1"
+    android:layout_marginBottom="@dimen/spacing_micro"
+    android:background="@drawable/bg_settings_card_choice"
+    android:clickable="true"
+    android:focusable="true"
+    android:foreground="?attr/selectableItemBackground"
+    android:gravity="center_vertical"
+    android:minHeight="@dimen/min_touch_target_size"
+    android:orientation="horizontal"
+    android:paddingStart="@dimen/spacing_large"
+    android:paddingTop="@dimen/spacing_small"
+    android:paddingEnd="@dimen/spacing_large"
+    android:paddingBottom="@dimen/spacing_small">
+
+    <!-- [app/src/main/res/layout/item_tree_child_choice.xml]: Ikon Opsional (Icon Pack/App) -->
+    <ImageView
+        android:id="@+id/img_choice_icon"
+        android:layout_width="@dimen/icon_inner_size"
+        android:layout_height="@dimen/icon_inner_size"
+        android:layout_marginEnd="@dimen/spacing_medium"
+        android:contentDescription="@null"
+        android:visibility="gone" />
+
+    <!-- [app/src/main/res/layout/item_tree_child_choice.xml]: Teks Opsi Pilihan -->
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/spacing_small"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tv_choice_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/text_primary"
+            android:textSize="@dimen/text_size_child_header" />
+
+        <TextView
+            android:id="@+id/tv_choice_description"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/spacing_micro"
+            android:textColor="@color/text_secondary"
+            android:textSize="@dimen/text_size_body_small"
+            android:visibility="gone" />
+    </LinearLayout>
+
+    <!-- [app/src/main/res/layout/item_tree_child_choice.xml]: Indikator Centang Terpilih -->
+    <ImageView
+        android:id="@+id/img_choice_check"
+        android:layout_width="@dimen/tree_check_size"
+        android:layout_height="@dimen/tree_check_size"
+        android:contentDescription="@null"
+        android:src="@drawable/ic_check"
+        android:visibility="invisible" />
+
+</LinearLayout>

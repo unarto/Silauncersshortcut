@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- [app/src/main/res/layout/view_smart_popup.xml]: Layout Container Smart Popup -->
+<!-- [Penjelasan]: Wadah popup yang berisi Kartu Pintasan Dinamis dan Kartu Aksi Sistem -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <!-- Kartu Notifikasi -->
+    <LinearLayout
+        android:id="@+id/card_notifications"
+        android:layout_width="@dimen/popup_card_width"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/popup_card_margin"
+        android:background="@drawable/bg_popup_card"
+        android:elevation="@dimen/popup_elevation"
+        android:orientation="vertical"
+        android:padding="@dimen/popup_padding"
+        android:visibility="gone">
+        <TextView
+            android:id="@+id/tv_notification_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/popup_text_primary"
+            android:textSize="@dimen/text_size_body_small"
+            android:textStyle="bold"
+            android:maxLines="1"
+            android:ellipsize="end" />
+        <TextView
+            android:id="@+id/tv_notification_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/spacing_micro"
+            android:textColor="@color/popup_text_secondary"
+            android:textSize="@dimen/text_size_body_small"
+            android:maxLines="2"
+            android:ellipsize="end" />
+    </LinearLayout>
+
+    <!-- [app/src/main/res/layout/view_smart_popup.xml]: Kontainer Kartu Popup Terpadu (Dynamic Shortcuts & System Actions Vertikal) -->
+    <!-- [Penjelasan]: Menyatukan daftar pintasan dinamis dan opsi aksi sistem secara vertikal dengan pembatas halus -->
+    <LinearLayout
+        android:id="@+id/card_main_popup"
+        android:layout_width="@dimen/popup_card_width"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_popup_card"
+        android:elevation="@dimen/popup_elevation"
+        android:orientation="vertical"
+        android:paddingTop="@dimen/spacing_small"
+        android:paddingBottom="@dimen/spacing_small">
+
+        <!-- Kartu 1: Dynamic Shortcuts List (Vertikal) -->
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_shortcuts"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:clipToPadding="false"
+            android:overScrollMode="never"
+            android:visibility="gone" />
+
+        <!-- Pembatas halus antara Shortcuts Dinamis dan Aksi Sistem -->
+        <View
+            android:id="@+id/divider_shortcuts"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/stroke_width_thin"
+            android:layout_marginTop="@dimen/spacing_small"
+            android:layout_marginBottom="@dimen/spacing_small"
+            android:layout_marginStart="@dimen/popup_padding_horizontal"
+            android:layout_marginEnd="@dimen/popup_padding_horizontal"
+            android:background="@color/popup_card_stroke"
+            android:visibility="gone" />
+
+        <!-- Kartu 2: System Actions Container (Vertikal) -->
+        <LinearLayout
+            android:id="@+id/card_system_actions"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <!-- Tombol: Info aplikasi -->
+            <LinearLayout
+                android:id="@+id/btn_action_info"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/popup_item_height"
+                android:background="?android:attr/selectableItemBackground"
+                android:clickable="true"
+                android:focusable="true"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingStart="@dimen/popup_padding_horizontal"
+                android:paddingEnd="@dimen/popup_padding_horizontal">
+
+                <ImageView
+                    android:layout_width="@dimen/popup_icon_size"
+                    android:layout_height="@dimen/popup_icon_size"
+                    android:contentDescription="@null"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/ic_info" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/spacing_medium"
+                    android:layout_weight="1"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:text="@string/action_app_info"
+                    android:textColor="@color/popup_text_primary"
+                    android:textSize="@dimen/text_size_child_header" />
+            </LinearLayout>
+
+            <!-- Tombol: Penyimpanan -->
+            <LinearLayout
+                android:id="@+id/btn_action_storage"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/popup_item_height"
+                android:background="?android:attr/selectableItemBackground"
+                android:clickable="true"
+                android:focusable="true"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingStart="@dimen/popup_padding_horizontal"
+                android:paddingEnd="@dimen/popup_padding_horizontal">
+
+                <ImageView
+                    android:layout_width="@dimen/popup_icon_size"
+                    android:layout_height="@dimen/popup_icon_size"
+                    android:contentDescription="@null"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/ic_storage" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/spacing_medium"
+                    android:layout_weight="1"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:text="@string/action_app_storage"
+                    android:textColor="@color/popup_text_primary"
+                    android:textSize="@dimen/text_size_child_header" />
+            </LinearLayout>
+
+            <!-- Tombol: Hapus / Uninstall -->
+            <LinearLayout
+                android:id="@+id/btn_action_uninstall"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/popup_item_height"
+                android:background="?android:attr/selectableItemBackground"
+                android:clickable="true"
+                android:focusable="true"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingStart="@dimen/popup_padding_horizontal"
+                android:paddingEnd="@dimen/popup_padding_horizontal">
+
+                <ImageView
+                    android:layout_width="@dimen/popup_icon_size"
+                    android:layout_height="@dimen/popup_icon_size"
+                    android:contentDescription="@null"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/ic_uninstall" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/spacing_medium"
+                    android:layout_weight="1"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:text="@string/action_uninstall"
+                    android:textColor="@color/popup_text_primary"
+                    android:textSize="@dimen/text_size_child_header" />
+            </LinearLayout>
+
+            <!-- Tombol: Bagikan / Share -->
+            <LinearLayout
+                android:id="@+id/btn_action_share"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/popup_item_height"
+                android:background="?android:attr/selectableItemBackground"
+                android:clickable="true"
+                android:focusable="true"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingStart="@dimen/popup_padding_horizontal"
+                android:paddingEnd="@dimen/popup_padding_horizontal">
+
+                <ImageView
+                    android:layout_width="@dimen/popup_icon_size"
+                    android:layout_height="@dimen/popup_icon_size"
+                    android:contentDescription="@null"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/ic_share" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/spacing_medium"
+                    android:layout_weight="1"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:text="@string/action_share"
+                    android:textColor="@color/popup_text_primary"
+                    android:textSize="@dimen/text_size_child_header" />
+            </LinearLayout>
+
+        </LinearLayout>
+    </LinearLayout>
+
+</LinearLayout>

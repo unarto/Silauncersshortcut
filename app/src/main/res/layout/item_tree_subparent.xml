@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- [app/src/main/res/layout/item_tree_subparent.xml]: Layout untuk SubParent Node dalam TreeView -->
+<!-- [Penjelasan]: Menampilkan subgrup expandable dengan indentasi level 1, judul, status badge/subtitle, dan chevron berputar -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/container_subparent"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="@dimen/tree_indent_depth_1"
+    android:layout_marginTop="@dimen/spacing_micro"
+    android:layout_marginEnd="@dimen/tree_indent_depth_1"
+    android:layout_marginBottom="@dimen/spacing_micro"
+    android:background="@drawable/bg_settings_card_subparent"
+    android:clickable="true"
+    android:focusable="true"
+    android:foreground="?attr/selectableItemBackground"
+    android:gravity="center_vertical"
+    android:minHeight="@dimen/min_touch_target_size"
+    android:orientation="horizontal"
+    android:paddingStart="@dimen/spacing_large"
+    android:paddingTop="@dimen/spacing_medium"
+    android:paddingEnd="@dimen/spacing_large"
+    android:paddingBottom="@dimen/spacing_medium">
+
+    <!-- [app/src/main/res/layout/item_tree_subparent.xml]: Judul & Subjudul -->
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/spacing_medium"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tv_subparent_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/text_primary"
+            android:textSize="@dimen/text_size_child_header"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/tv_subparent_description"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/spacing_micro"
+            android:textColor="@color/text_secondary"
+            android:textSize="@dimen/text_size_body_small" />
+    </LinearLayout>
+
+    <!-- [app/src/main/res/layout/item_tree_subparent.xml]: Indikator Nilai Saat Ini / Badge -->
+    <TextView
+        android:id="@+id/tv_subparent_value"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/spacing_small"
+        android:background="@drawable/bg_select_pill"
+        android:paddingStart="@dimen/spacing_medium"
+        android:paddingTop="@dimen/spacing_micro"
+        android:paddingEnd="@dimen/spacing_medium"
+        android:paddingBottom="@dimen/spacing_micro"
+        android:textColor="@color/pill_text"
+        android:textSize="@dimen/text_size_pill"
+        android:visibility="gone" />
+
+    <!-- [app/src/main/res/layout/item_tree_subparent.xml]: Chevron Indicator -->
+    <ImageView
+        android:id="@+id/img_subparent_chevron"
+        android:layout_width="@dimen/chevron_size"
+        android:layout_height="@dimen/chevron_size"
+        android:contentDescription="@null"
+        android:src="@drawable/ic_chevron_down" />
+
+</LinearLayout>

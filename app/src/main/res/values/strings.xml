@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- [app/src/main/res/values/strings.xml]: Berkas sumber daya string resmi -->
+<!-- [Penjelasan]: Seluruh teks antarmuka aplikasi disimpan di sini tanpa hardcoded -->
+<resources>
+    <!-- [app/src/main/res/values/strings.xml]: Nama aplikasi dan aksi umum -->
+    <string name="app_name">Silauncer</string>
+    <string name="settings_title">Pengaturan</string>
+    <string name="settings_subtitle">Kustomisasi tata letak, ikon, dan preferensi launcher</string>
+    <string name="back">Kembali</string>
+    <string name="cancel">Batal</string>
+    <string name="error_app_not_found">Aplikasi tidak ditemukan: %1$s</string>
+    <string name="error_cannot_open_app">Tidak dapat membuka aplikasi: %1$s</string>
+    <string name="error_settings_crash">Terjadi kesalahan pengaturan: %1$s</string>
+
+    <string name="format_grid">%1$dx%2$d</string>
+    <string name="format_dp">%1$d dp</string>
+    <string name="format_sp">%1$d sp</string>
+
+    <!-- [app/src/main/res/values/strings.xml]: Pengaturan Grid & Tata Letak -->
+    <string name="pref_category_grid">Grid &amp; Tata Letak</string>
+    <string name="pref_category_grid_desc">Kustomisasi dimensi kisi kolom, baris, dan jarak antar ikon</string>
+    <string name="pref_grid_layout">Tata Letak Kisi</string>
+    <string name="pref_grid_layout_desc">Jumlah kolom dan baris aplikasi pada layar utama</string>
+    <string name="pref_icon_spacing">Jarak Antar Ikon</string>
+    <string name="pref_icon_spacing_desc">Margin pemisah vertikal dan horizontal antar item</string>
+
+    <!-- [app/src/main/res/values/strings.xml]: Pengaturan Ikon & Label Aplikasi -->
+    <string name="pref_category_icons">Ikon &amp; Label Aplikasi</string>
+    <string name="pref_category_icons_desc">Paket ikon, ukuran bitmap, sakelar nama, dan tipografi label</string>
+    <string name="pref_icon_pack">Paket Ikon (Icon Pack)</string>
+    <string name="pref_icon_pack_desc">Pilih tampilan ikon dari sistem AOSP atau Icon Pack terinstal</string>
+    <string name="pref_icon_pack_default">Default Sistem / AOSP</string>
+    <string name="pref_icon_size">Ukuran Ikon</string>
+    <string name="pref_icon_size_desc">Dimensi rendering bitmap ikon pada layar</string>
+    <string name="pref_show_labels">Tampilkan Label Aplikasi</string>
+    <string name="pref_show_labels_desc">Tampilkan teks nama di bawah setiap ikon aplikasi</string>
+    <string name="pref_label_size">Ukuran Teks Label</string>
+    <string name="pref_label_size_desc">Ukuran font teks nama aplikasi</string>
+
+    <!-- [app/src/main/res/values/strings.xml]: Pengaturan Bahasa -->
+    <string name="pref_category_language">Bahasa Aplikasi</string>
+    <string name="pref_category_language_desc">Pengaturan bahasa tampilan antarmuka launcher</string>
+    <string name="pref_app_language">Bahasa Tampilan</string>
+    <string name="pref_app_language_desc">Bahasa yang digunakan untuk menu dan pengaturan</string>
+    <string name="pref_lang_system_default">Default Sistem</string>
+    <string name="pref_lang_indonesian">Bahasa Indonesia</string>
+    <string name="pref_lang_english">English</string>
+
+    <!-- [app/src/main/res/values/strings.xml]: Pengaturan Laci Aplikasi & Urutan -->
+    <string name="pref_category_drawer">Laci Aplikasi &amp; Urutan</string>
+    <string name="pref_category_drawer_desc">Mode pengurutan aplikasi dan visibilitas aplikasi</string>
+    <string name="pref_sort_mode">Mode Pengurutan</string>
+    <string name="pref_sort_mode_desc">Urutan daftar aplikasi di layar utama</string>
+    <string name="pref_sort_az">A - Z</string>
+    <string name="pref_sort_za">Z - A</string>
+    <string name="pref_sort_custom">Kustom</string>
+    <string name="pref_hidden_apps">Aplikasi Tersembunyi</string>
+    <string name="pref_hidden_apps_desc">Pilih aplikasi yang ingin disembunyikan dari layar utama</string>
+    <string name="pref_hidden_apps_count">%1$d aplikasi disembunyikan</string>
+    <string name="pref_hidden_apps_empty">Tidak ada aplikasi yang disembunyikan</string>
+    <string name="pref_reset_layout">Atur Ulang Tata Letak</string>
+    <string name="pref_reset_layout_desc">Kembalikan semua pengaturan tata letak ke bawaan</string>
+    <string name="pref_reset_layout_success">Pengaturan tata letak berhasil diatur ulang</string>
+
+    <!-- [app/src/main/res/values/strings.xml]: Aksi Popup Launcher -->
+    <string name="action_app_info">Info aplikasi</string>
+    <string name="action_app_storage">Penyimpanan</string>
+    <string name="action_uninstall">Hapus</string>
+    <string name="action_share">Bagikan</string>
+</resources>

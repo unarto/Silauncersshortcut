@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- [app/src/main/res/values/themes.xml]: Berkas tema aplikasi Silauncer -->
+<!-- [Penjelasan]: Menentukan tema utama dan tema transparan translucent untuk Settings agar wallpaper terlihat -->
+<resources>
+    <!-- [app/src/main/res/values/themes.xml]: Tema utama launcher -->
+    <style name="Theme.Silauncer" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:colorBackgroundCacheHint">@null</item>
+        <item name="android:windowShowWallpaper">true</item>
+        <item name="android:windowTranslucentNavigation">true</item>
+        <item name="android:windowTranslucentStatus">true</item>
+    </style>
+    
+    <!-- [app/src/main/res/values/themes.xml]: Tema transparan untuk Settings dengan Wallpaper -->
+    <!-- [Penjelasan]: Mengaktifkan windowIsTranslucent dan windowShowWallpaper agar wallpaper perangkat tampil di latar belakang -->
+    <style name="Theme.Silauncer.Settings" parent="Theme.AppCompat.NoActionBar">
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowShowWallpaper">true</item>
+        <item name="android:windowTranslucentNavigation">true</item>
+        <item name="android:windowTranslucentStatus">true</item>
+        <item name="android:colorBackgroundCacheHint">@null</item>
+    </style>
+</resources>

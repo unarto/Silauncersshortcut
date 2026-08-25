@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- [app/src/main/res/drawable/ic_icons.xml]: Vektor ikon kategori Ikon & Label Aplikasi -->
+<!-- [Penjelasan]: Ikon aplikasi dan bintang untuk modul ikon & label -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+  <path
+      android:fillColor="@color/icon_tint_primary"
+      android:pathData="M12,2C6.48,2 2,6.48 2,12s4.48,10 10,10 10,-4.48 10,-10S17.52,2 12,2zM12,20c-4.41,0 -8,-3.59 -8,-8s3.59,-8 8,-8 8,3.59 8,8 -3.59,8 -8,8zM6.5,9C7.33,9 8,8.33 8,7.5S7.33,6 6.5,6 5,6.67 5,7.5 5.67,9 6.5,9zM9.5,13c0.83,0 1.5,-0.67 1.5,-1.5S10.33,10 9.5,10 8,10.67 8,11.5 8.67,13 9.5,13zM14.5,13c0.83,0 1.5,-0.67 1.5,-1.5S15.33,10 14.5,10 13,10.67 13,11.5s0.67,1.5 1.5,1.5zM17.5,9c0.83,0 1.5,-0.67 1.5,-1.5S18.33,6 17.5,6 16,6.67 16,7.5s0.67,1.5 1.5,1.5z"/>
+</vector>

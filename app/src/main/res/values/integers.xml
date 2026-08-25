@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- [app/src/main/res/values/integers.xml]: Sumber daya integer & durasi motion Material Design -->
+<!-- [Penjelasan]: Durasi animasi Material motion untuk transisi grid saat aplikasi ditambahkan, dihapus, atau diorganisasi ulang -->
+<resources>
+    <integer name="motion_duration_app_remove">200</integer>
+    <integer name="motion_duration_app_add">280</integer>
+    <integer name="motion_duration_app_move">320</integer>
+    <integer name="motion_duration_app_change">240</integer>
+</resources>

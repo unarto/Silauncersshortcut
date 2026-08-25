@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- [app/src/main/res/layout/activity_settings.xml]: Layout utama halaman Pengaturan -->
+<!-- [Penjelasan]: Menampilkan header dengan tombol kembali, judul, deskripsi, dan RecyclerView TreeView dengan overlay transparan -->
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/settings_overlay_bg"
+    android:fitsSystemWindows="true">
+
+    <!-- [app/src/main/res/layout/activity_settings.xml]: Header Layout -->
+    <!-- [Penjelasan]: Baris atas header berisi tombol kembali, judul, dan subjudul -->
+    <LinearLayout
+        android:id="@+id/header_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingStart="@dimen/spacing_large"
+        android:paddingTop="@dimen/spacing_extra_large"
+        android:paddingEnd="@dimen/spacing_large"
+        android:paddingBottom="@dimen/spacing_large">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/btn_back"
+                android:layout_width="@dimen/back_button_size"
+                android:layout_height="@dimen/back_button_size"
+                android:layout_marginEnd="@dimen/spacing_medium"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="@string/back"
+                android:padding="@dimen/spacing_micro"
+                android:src="@drawable/ic_back" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/settings_title"
+                android:textColor="@color/text_primary"
+                android:textSize="@dimen/text_size_title"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/spacing_bottom_padding"
+            android:layout_marginTop="@dimen/spacing_micro"
+            android:text="@string/settings_subtitle"
+            android:textColor="@color/text_secondary"
+            android:textSize="@dimen/text_size_subtitle" />
+    </LinearLayout>
+
+    <!-- [app/src/main/res/layout/activity_settings.xml]: RecyclerView TreeView Settings -->
+    <!-- [Penjelasan]: Daftar item hirarki pengaturan yang dapat di-scroll -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_settings_tree"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/header_layout"
+        android:clipToPadding="false"
+        android:paddingStart="@dimen/spacing_large"
+        android:paddingTop="@dimen/spacing_small"
+        android:paddingEnd="@dimen/spacing_large"
+        android:paddingBottom="@dimen/spacing_bottom_padding" />
+
+</RelativeLayout>

@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- [app/src/main/res/layout/item_tree_child_switch.xml]: Layout untuk Child Switch Node -->
+<!-- [Penjelasan]: Menampilkan item sakelar On/Off (Switch) dengan dukungan ikon aplikasi dan indentasi visual -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/container_child_switch"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="@dimen/tree_indent_depth_1"
+    android:layout_marginTop="@dimen/spacing_micro"
+    android:layout_marginEnd="@dimen/tree_indent_depth_1"
+    android:layout_marginBottom="@dimen/spacing_micro"
+    android:background="@drawable/bg_settings_card_child"
+    android:clickable="true"
+    android:focusable="true"
+    android:foreground="?attr/selectableItemBackground"
+    android:gravity="center_vertical"
+    android:minHeight="@dimen/min_touch_target_size"
+    android:orientation="horizontal"
+    android:paddingStart="@dimen/spacing_large"
+    android:paddingTop="@dimen/spacing_medium"
+    android:paddingEnd="@dimen/spacing_large"
+    android:paddingBottom="@dimen/spacing_medium">
+
+    <!-- [app/src/main/res/layout/item_tree_child_switch.xml]: Ikon Aplikasi Opsional -->
+    <ImageView
+        android:id="@+id/img_switch_icon"
+        android:layout_width="@dimen/tree_app_icon_size"
+        android:layout_height="@dimen/tree_app_icon_size"
+        android:layout_marginEnd="@dimen/spacing_medium"
+        android:contentDescription="@null"
+        android:visibility="gone" />
+
+    <!-- [app/src/main/res/layout/item_tree_child_switch.xml]: Judul & Subjudul -->
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/spacing_medium"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tv_child_switch_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/text_primary"
+            android:textSize="@dimen/text_size_child_header"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/tv_child_switch_description"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/spacing_micro"
+            android:textColor="@color/text_secondary"
+            android:textSize="@dimen/text_size_body_small" />
+    </LinearLayout>
+
+    <!-- [app/src/main/res/layout/item_tree_child_switch.xml]: Komponen Switch Sakelar -->
+    <androidx.appcompat.widget.SwitchCompat
+        android:id="@+id/switch_control"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:clickable="false"
+        android:focusable="false" />
+
+</LinearLayout>
+

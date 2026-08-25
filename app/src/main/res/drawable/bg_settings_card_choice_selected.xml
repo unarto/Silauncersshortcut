@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- [app/src/main/res/drawable/bg_settings_card_choice_selected.xml]: Shape drawable untuk kartu Choice Item Terpilih -->
+<!-- [Penjelasan]: Latar belakang aksen bercahaya halus untuk opsi pilihan yang sedang aktif -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+    <solid android:color="@color/card_bg_choice_selected" />
+    <corners android:radius="@dimen/subparent_corner_radius" />
+    <stroke
+        android:width="@dimen/stroke_width_thin"
+        android:color="@color/card_stroke_choice_selected" />
+</shape>

@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- [app/src/main/res/values/dimens.xml]: Berkas sumber daya dimensi resmi -->
+<!-- [Penjelasan]: Definisi seluruh dimensi (margin, padding, ukuran teks, radius) tanpa hardcoded -->
+<resources>
+    <!-- [app/src/main/res/values/dimens.xml]: Dimensi margin dan padding umum -->
+    <!-- [Penjelasan]: Jarak margin dan padding standar antarmuka -->
+    <dimen name="spacing_micro">4dp</dimen>
+    <dimen name="spacing_small">8dp</dimen>
+    <dimen name="spacing_medium">12dp</dimen>
+    <dimen name="spacing_large">16dp</dimen>
+    <dimen name="spacing_extra_large">24dp</dimen>
+    <dimen name="spacing_huge">32dp</dimen>
+    <dimen name="spacing_bottom_padding">48dp</dimen>
+    
+    <!-- [app/src/main/res/values/dimens.xml]: Ukuran sudut membulat (Corner Radius) -->
+    <!-- [Penjelasan]: Radius kartu dan tombol pill -->
+    <dimen name="card_corner_radius">16dp</dimen>
+    <dimen name="pill_corner_radius">12dp</dimen>
+    <dimen name="icon_container_corner_radius">10dp</dimen>
+    
+    <!-- [app/src/main/res/values/dimens.xml]: Ketebalan stroke/border -->
+    <!-- [Penjelasan]: Lebar garis tepi kartu dan tombol -->
+    <dimen name="stroke_width_thin">1dp</dimen>
+    
+    <!-- [app/src/main/res/values/dimens.xml]: Ukuran ikon dan kontainer -->
+    <!-- [Penjelasan]: Dimensi visual ikon dan tombol aksi -->
+    <dimen name="app_icon_default_size">56dp</dimen>
+    <dimen name="icon_container_size">40dp</dimen>
+    <dimen name="icon_inner_size">24dp</dimen>
+    <dimen name="chevron_size">20dp</dimen>
+    <dimen name="back_button_size">36dp</dimen>
+    <dimen name="tree_app_icon_size">32dp</dimen>
+    <dimen name="tree_check_size">20dp</dimen>
+    <dimen name="tree_indent_depth_1">12dp</dimen>
+    <dimen name="tree_indent_depth_2">28dp</dimen>
+    <dimen name="subparent_corner_radius">12dp</dimen>
+    
+    <!-- [app/src/main/res/values/dimens.xml]: Ukuran teks (SP) -->
+    <!-- [Penjelasan]: Skala tipografi teks antarmuka -->
+    <dimen name="text_size_title">22sp</dimen>
+    <dimen name="text_size_subtitle">13sp</dimen>
+    <dimen name="text_size_parent_header">15sp</dimen>
+    <dimen name="text_size_child_header">14sp</dimen>
+    <dimen name="text_size_body_small">12sp</dimen>
+    <dimen name="text_size_pill">13sp</dimen>
+    <dimen name="text_size_app_label">11sp</dimen>
+    
+    <!-- [app/src/main/res/values/dimens.xml]: Elevasi & Touch Target -->
+    <!-- [Penjelasan]: Nilai target sentuh minimum komponen -->
+    <dimen name="min_touch_target_size">48dp</dimen>
+
+    <!-- [app/src/main/res/values/dimens.xml]: Dimensi Popup dan Shortcut -->
+    <!-- [Penjelasan]: Ukuran radius, margin, padding, lebar kontainer, dan ikon untuk Smart Popup -->
+    <dimen name="popup_card_width">260dp</dimen>
+    <dimen name="popup_corner_radius">16dp</dimen>
+    <dimen name="popup_card_margin">8dp</dimen>
+    <dimen name="popup_margin">8dp</dimen>
+    <dimen name="popup_padding">12dp</dimen>
+    <dimen name="popup_padding_horizontal">16dp</dimen>
+    <dimen name="popup_item_height">48dp</dimen>
+    <dimen name="popup_icon_size">24dp</dimen>
+    <dimen name="popup_elevation">8dp</dimen>
+    <!-- [app/src/main/res/values/dimens.xml]: Dimensi Badge Notifikasi Pintar -->
+    <!-- [Penjelasan]: Ukuran radius dan margin untuk lencana notifikasi di ikon aplikasi -->
+    <dimen name="badge_corner_radius">10dp</dimen>
+    <dimen name="badge_min_size">16dp</dimen>
+    <dimen name="badge_text_size">10sp</dimen>
+    <dimen name="badge_padding_horizontal">4dp</dimen>
+    <dimen name="badge_padding_vertical">2dp</dimen>
+    <dimen name="badge_margin_negative">-4dp</dimen>
+</resources>

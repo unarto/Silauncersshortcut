@@ -8,19 +8,41 @@ import com.silauncer.cepat.apps.AppStateHolder
 import com.silauncer.cepat.apps.AppSorter
 import com.silauncer.cepat.cache.IconCache
 import com.silauncer.cepat.storage.LauncherPreferences
+import com.silauncer.cepat.storage.db.AppItemEntity
+import com.silauncer.cepat.storage.db.LauncherRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
 class LauncherAppController(
     private val appDataSource: AppDataSource,
     private val appStateHolder: AppStateHolder,
-    private val prefs: LauncherPreferences
+    private val prefs: LauncherPreferences,
+    private val repository: LauncherRepository
 ) {
     suspend fun loadAppsInitial(): List<AppInfo> {
+        migrateIfNeeded()
         val user = Process.myUserHandle()
         val installedApps = appDataSource.getInstalledApps(null, user)
         appStateHolder.setApps(installedApps)
         return getSortedVisibleApps()
+    }
+
+    private suspend fun migrateIfNeeded() {
+        val dbItems = repository.getAllItems()
+        if (dbItems.isEmpty() && prefs.appOrder.isNotEmpty()) {
+            val gridCols = prefs.gridColumns
+            val entities = prefs.appOrder.mapIndexed { index, compStr ->
+                val pkg = compStr.substringBefore('/')
+                AppItemEntity(
+                    packageName = pkg,
+                    componentName = compStr,
+                    cellX = index % gridCols,
+                    cellY = index / gridCols,
+                    pageIndex = 0
+                )
+            }
+            repository.saveCustomOrder(entities)
+        }
     }
 
     suspend fun refreshApps(): List<AppInfo> {
@@ -29,8 +51,22 @@ class LauncherAppController(
 
     suspend fun saveCustomAppOrder(visibleApps: List<AppInfo>) {
         val allApps = appStateHolder.getApps()
-        val newOrder = calculateMergedOrder(allApps, visibleApps, prefs.appOrder)
-        prefs.appOrder = newOrder
+        val currentOrderKeys = repository.getAllItems().map { it.componentName }
+        val newOrder = calculateMergedOrder(allApps, visibleApps, currentOrderKeys)
+        
+        val gridCols = prefs.gridColumns
+        val entities = newOrder.mapIndexed { index, compStr ->
+            val pkg = compStr.substringBefore('/')
+            AppItemEntity(
+                packageName = pkg,
+                componentName = compStr,
+                cellX = index % gridCols,
+                cellY = index / gridCols,
+                pageIndex = 0
+            )
+        }
+        repository.saveCustomOrder(entities)
+        
         if (prefs.sortMode != "custom") {
             prefs.sortMode = "custom"
         }
@@ -41,7 +77,9 @@ class LauncherAppController(
         return withContext(Dispatchers.Default) {
             val hidden = prefs.hiddenApps
             val visibleApps = apps.filter { !hidden.contains(it.componentName.packageName) }
-            AppSorter.sort(visibleApps, prefs.sortMode, prefs.appOrder)
+            val dbItems = repository.getAllItems()
+            val dbOrder = dbItems.map { it.componentName }
+            AppSorter.sort(visibleApps, prefs.sortMode, dbOrder)
         }
     }
 
@@ -66,15 +104,7 @@ class LauncherAppController(
                         prefs.hiddenApps = currentHidden - packageName
                     }
                     
-                    val currentOrder = prefs.appOrder
-                    if (currentOrder.isNotEmpty()) {
-                        val filteredOrder = currentOrder.filter { key ->
-                            key.substringBefore('/') != packageName
-                        }
-                        if (filteredOrder.size != currentOrder.size) {
-                            prefs.appOrder = filteredOrder
-                        }
-                    }
+                    repository.deleteItem(packageName)
                     
                     changed = removed
                 }

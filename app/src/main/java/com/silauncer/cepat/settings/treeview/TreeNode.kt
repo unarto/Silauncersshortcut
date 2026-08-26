@@ -9,7 +9,8 @@ enum class NodeType {
     SUB_PARENT,
     CHOICE,
     SWITCH,
-    ACTION
+    ACTION,
+    SLIDER
 }
 
 // [app/src/main/java/com/silauncer/cepat/settings/treeview/TreeNode.kt]: Data class model TreeNode
@@ -26,8 +27,12 @@ data class TreeNode(
     val children: MutableList<TreeNode> = mutableListOf(),
     var isSelected: Boolean = false,
     var value: Any? = null,
+    val sliderMin: Float = 0f,
+    val sliderMax: Float = 100f,
+    val sliderStep: Float = 1f,
     val onSelect: (() -> Unit)? = null,
     val onSwitchChange: ((Boolean) -> Unit)? = null,
-    val onAction: (() -> Unit)? = null
+    val onAction: (() -> Unit)? = null,
+    val onSliderChange: ((Float) -> Unit)? = null
 )
 

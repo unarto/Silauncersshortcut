@@ -39,39 +39,7 @@ object SettingsNodeFactory {
         // 1. GROUP GRID & TATA LETAK
         // ==========================================
         val currentGridStr = context.getString(R.string.format_grid, prefs.gridColumns, prefs.gridRows)
-        val gridLayoutChoices = listOf("4x4", "4x5", "5x5", "5x6", "6x6").map { opt ->
-            val parts = opt.split("x")
-            val cols = parts.getOrNull(0)?.toIntOrNull() ?: 5
-            val rows = parts.getOrNull(1)?.toIntOrNull() ?: 6
-            TreeNode(
-                id = "choice_grid_$opt",
-                title = context.getString(R.string.format_grid, cols, rows),
-                nodeType = NodeType.CHOICE,
-                depth = 2,
-                isSelected = (prefs.gridColumns == cols && prefs.gridRows == rows),
-                onSelect = {
-                    prefs.gridColumns = cols
-                    prefs.gridRows = rows
-                    onTreeChanged()
-                }
-            )
-        }
-
-        val currentSpacingStr = context.getString(R.string.format_dp, prefs.iconSpacing)
-        val spacingChoices = listOf(4, 8, 12, 16, 24).map { spacing ->
-            TreeNode(
-                id = "choice_spacing_$spacing",
-                title = context.getString(R.string.format_dp, spacing),
-                nodeType = NodeType.CHOICE,
-                depth = 2,
-                isSelected = (prefs.iconSpacing == spacing),
-                onSelect = {
-                    prefs.iconSpacing = spacing
-                    onTreeChanged()
-                }
-            )
-        }
-
+        
         val gridNode = TreeNode(
             id = "group_grid",
             iconRes = R.drawable.ic_grid,
@@ -81,22 +49,43 @@ object SettingsNodeFactory {
             isExpanded = true,
             children = mutableListOf(
                 TreeNode(
-                    id = "subparent_grid_layout",
-                    title = context.getString(R.string.pref_grid_layout),
-                    description = context.getString(R.string.pref_grid_layout_desc),
-                    nodeType = NodeType.SUB_PARENT,
+                    id = "slider_grid_columns",
+                    title = "Kolom (Columns)",
+                    nodeType = NodeType.SLIDER,
                     depth = 1,
-                    value = currentGridStr,
-                    children = gridLayoutChoices.toMutableList()
+                    value = prefs.gridColumns.toFloat(),
+                    sliderMin = 3f,
+                    sliderMax = 8f,
+                    sliderStep = 1f,
+                    onSliderChange = { value ->
+                        prefs.gridColumns = value.toInt()
+                    }
                 ),
                 TreeNode(
-                    id = "subparent_icon_spacing",
-                    title = context.getString(R.string.pref_icon_spacing),
-                    description = context.getString(R.string.pref_icon_spacing_desc),
-                    nodeType = NodeType.SUB_PARENT,
+                    id = "slider_grid_rows",
+                    title = "Baris (Rows)",
+                    nodeType = NodeType.SLIDER,
                     depth = 1,
-                    value = currentSpacingStr,
-                    children = spacingChoices.toMutableList()
+                    value = prefs.gridRows.toFloat(),
+                    sliderMin = 3f,
+                    sliderMax = 10f,
+                    sliderStep = 1f,
+                    onSliderChange = { value ->
+                        prefs.gridRows = value.toInt()
+                    }
+                ),
+                TreeNode(
+                    id = "slider_icon_spacing",
+                    title = context.getString(R.string.pref_icon_spacing),
+                    nodeType = NodeType.SLIDER,
+                    depth = 1,
+                    value = prefs.iconSpacing.toFloat(),
+                    sliderMin = 0f,
+                    sliderMax = 48f,
+                    sliderStep = 2f,
+                    onSliderChange = { value ->
+                        prefs.iconSpacing = value.toInt()
+                    }
                 )
             )
         )
@@ -150,36 +139,6 @@ object SettingsNodeFactory {
             )
         }
 
-        val currentIconSizeStr = context.getString(R.string.format_dp, prefs.iconSize)
-        val iconSizeChoices = listOf(32, 48, 56, 64, 72).map { size ->
-            TreeNode(
-                id = "choice_iconsize_$size",
-                title = context.getString(R.string.format_dp, size),
-                nodeType = NodeType.CHOICE,
-                depth = 2,
-                isSelected = (prefs.iconSize == size),
-                onSelect = {
-                    prefs.iconSize = size
-                    onTreeChanged()
-                }
-            )
-        }
-
-        val currentLabelSizeStr = context.getString(R.string.format_sp, prefs.labelSize.toInt())
-        val labelSizeChoices = listOf(10, 12, 14, 16).map { size ->
-            TreeNode(
-                id = "choice_labelsize_$size",
-                title = context.getString(R.string.format_sp, size),
-                nodeType = NodeType.CHOICE,
-                depth = 2,
-                isSelected = (prefs.labelSize.toInt() == size),
-                onSelect = {
-                    prefs.labelSize = size.toFloat()
-                    onTreeChanged()
-                }
-            )
-        }
-
         val iconsNode = TreeNode(
             id = "group_icons",
             iconRes = R.drawable.ic_icons,
@@ -198,13 +157,17 @@ object SettingsNodeFactory {
                     children = iconPackChoices
                 ),
                 TreeNode(
-                    id = "subparent_icon_size",
+                    id = "slider_icon_size",
                     title = context.getString(R.string.pref_icon_size),
-                    description = context.getString(R.string.pref_icon_size_desc),
-                    nodeType = NodeType.SUB_PARENT,
+                    nodeType = NodeType.SLIDER,
                     depth = 1,
-                    value = currentIconSizeStr,
-                    children = iconSizeChoices.toMutableList()
+                    value = prefs.iconSize.toFloat(),
+                    sliderMin = 32f,
+                    sliderMax = 96f,
+                    sliderStep = 4f,
+                    onSliderChange = { value ->
+                        prefs.iconSize = value.toInt()
+                    }
                 ),
                 TreeNode(
                     id = "item_show_labels",
@@ -218,13 +181,17 @@ object SettingsNodeFactory {
                     }
                 ),
                 TreeNode(
-                    id = "subparent_label_size",
+                    id = "slider_label_size",
                     title = context.getString(R.string.pref_label_size),
-                    description = context.getString(R.string.pref_label_size_desc),
-                    nodeType = NodeType.SUB_PARENT,
+                    nodeType = NodeType.SLIDER,
                     depth = 1,
-                    value = currentLabelSizeStr,
-                    children = labelSizeChoices.toMutableList()
+                    value = prefs.labelSize,
+                    sliderMin = 8f,
+                    sliderMax = 24f,
+                    sliderStep = 1f,
+                    onSliderChange = { value ->
+                        prefs.labelSize = value
+                    }
                 )
             )
         )

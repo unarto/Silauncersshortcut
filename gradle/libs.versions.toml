@@ -24,6 +24,10 @@ androidx-runner = { group = "androidx.test", name = "runner", version.ref = "run
 kotlinx-coroutines-android = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-android", version.ref = "kotlinxCoroutinesAndroid" }
 kotlinx-coroutines-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref = "kotlinxCoroutinesCore" }
 robolectric = { group = "org.robolectric", name = "robolectric", version.ref = "robolectric" }
+androidx-room-runtime = { group = "androidx.room", name = "room-runtime", version = "2.7.0-beta01" }
+androidx-room-compiler = { group = "androidx.room", name = "room-compiler", version = "2.7.0-beta01" }
+androidx-room-ktx = { group = "androidx.room", name = "room-ktx", version = "2.7.0-beta01" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
+ksp = { id = "com.google.devtools.ksp", version = "2.2.10-2.0.2" }

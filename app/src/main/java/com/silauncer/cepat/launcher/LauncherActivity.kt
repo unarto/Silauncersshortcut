@@ -40,7 +40,10 @@ class LauncherActivity : AppCompatActivity() {
         val appDataSource = AppDataSource(applicationContext)
         val appStateHolder = AppStateHolder()
         
-        appController = LauncherAppController(appDataSource, appStateHolder, prefs)
+        val db = com.silauncer.cepat.storage.db.LauncherDatabase.getDatabase(this)
+        val repository = com.silauncer.cepat.storage.db.LauncherRepository(db.appItemDao())
+        
+        appController = LauncherAppController(appDataSource, appStateHolder, prefs, repository)
         actionHandler = AppActionHandler(this)
 
         recyclerView = findViewById(R.id.app_grid)

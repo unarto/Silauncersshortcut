@@ -14,40 +14,61 @@ import com.silauncer.cepat.apps.AppInfo
 import com.silauncer.cepat.shortcut.ShortcutFetcher
 import com.silauncer.cepat.shortcut.ShortcutLauncher
 import com.silauncer.cepat.shortcut.ShortcutParser
-
 import com.silauncer.cepat.notification.NotificationStateManager
 
 // [app/src/main/java/com/silauncer/cepat/popup/PopupController.kt]: Pengelola Lifecycle PopupWindow
 // [Penjelasan]: Mengontrol penampilan, animasi, penghitungan posisi, dan dismiss popup saat touch outside
 class PopupController(private val context: Context) {
-
     private var popupWindow: PopupWindow? = null
 
     fun showPopup(targetView: View, appInfo: AppInfo) {
         dismiss()
-
         val smartPopupView = SmartPopupView(context)
 
         // Fetch dynamic shortcuts
         val rawShortcuts = ShortcutFetcher.getShortcuts(context, appInfo.packageName, appInfo.user)
-        val parsedShortcuts = ShortcutParser.parseList(context, rawShortcuts)
+        val parsedShortcuts = ShortcutParser.parseList(context, rawShortcuts).toMutableList()
+        
+        // If dynamic shortcuts are empty, check static manifest shortcuts from APK resources
+        if (parsedShortcuts.isEmpty()) {
+            val manifestShortcuts = ShortcutFetcher.getManifestShortcutsFromXml(context, appInfo.packageName)
+            parsedShortcuts.addAll(manifestShortcuts)
+        }
+
+        // Fetch config shortcuts
+        val rawConfigShortcuts = ShortcutFetcher.getConfigShortcuts(context, appInfo.packageName, appInfo.user)
+        val parsedConfigShortcuts = ShortcutParser.parseConfigList(context, rawConfigShortcuts)
+        parsedShortcuts.addAll(parsedConfigShortcuts)
 
         smartPopupView.setupShortcuts(parsedShortcuts)
         
         // Fetch notifications
         val notifications = NotificationStateManager.notifications.value[appInfo.packageName] ?: emptyList()
         smartPopupView.setupNotifications(notifications)
+        
+        // Filter System Actions visibility based on system app status
+        val pm = context.packageManager
+        var isSystemApp = false
+        try {
+            val aInfo = pm.getApplicationInfo(appInfo.packageName, 0)
+            isSystemApp = (aInfo.flags and android.content.pm.ApplicationInfo.FLAG_SYSTEM) != 0 || 
+                          (aInfo.flags and android.content.pm.ApplicationInfo.FLAG_UPDATED_SYSTEM_APP) != 0
+        } catch (e: Exception) {
+            // Ignore
+        }
+        val showUninstall = !isSystemApp
+        val showShare = !isSystemApp
+        smartPopupView.setupSystemActions(
+            showInfo = true,
+            showUninstall = showUninstall,
+            showShare = showShare,
+            hasShortcuts = parsedShortcuts.isNotEmpty()
+        )
 
         // Action: Info aplikasi
         smartPopupView.setOnInfoClickListener {
             dismiss()
             openAppInfo(appInfo.packageName)
-        }
-
-        // Action: Storage
-        smartPopupView.setOnStorageClickListener {
-            dismiss()
-            openAppStorage(appInfo.packageName)
         }
 
         // Action: Uninstall
@@ -74,7 +95,7 @@ class PopupController(private val context: Context) {
                 location[0] + targetView.width,
                 location[1] + targetView.height
             )
-            ShortcutLauncher.launch(context, shortcut.rawInfo, sourceBounds, appInfo.user)
+            ShortcutLauncher.launch(context, shortcut, sourceBounds, appInfo.user)
         }
 
         popupWindow = PopupWindow(
@@ -93,7 +114,6 @@ class PopupController(private val context: Context) {
             View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED),
             View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED)
         )
-
         val popupWidth = smartPopupView.measuredWidth
         val popupHeight = smartPopupView.measuredHeight
         val displayMetrics = context.resources.displayMetrics
@@ -108,6 +128,17 @@ class PopupController(private val context: Context) {
             marginPx = marginPx
         )
 
+        // Hitung posisi indikator panah (Arrow Indicator) agar menunjuk tepat ke ikon
+        val location = IntArray(2)
+        targetView.getLocationOnScreen(location)
+        val targetCenterX = location[0] + targetView.width / 2
+        val arrowWidth = 24 * displayMetrics.density
+        val rawArrowOffset = (targetCenterX - pos.x) - (arrowWidth / 2)
+        val minArrowX = marginPx.toFloat()
+        val maxArrowX = (popupWidth - arrowWidth - marginPx).coerceAtLeast(minArrowX)
+        val clampedArrowOffset = rawArrowOffset.coerceIn(minArrowX, maxArrowX)
+
+        smartPopupView.setupArrow(pos.showAbove, clampedArrowOffset)
         popupWindow?.showAtLocation(targetView, 0, pos.x, pos.y)
     }
 
@@ -122,20 +153,6 @@ class PopupController(private val context: Context) {
                 data = Uri.fromParts("package", packageName, null)
                 addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             }
-            context.startActivity(intent)
-        } catch (e: Exception) {
-            // Safe fallback
-        }
-    }
-
-    private fun openAppStorage(packageName: String) {
-        try {
-            val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
-                data = Uri.fromParts("package", packageName, null)
-                addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-            }
-            // In Android, there isn't a direct standard intent to open storage, 
-            // ACTION_APPLICATION_DETAILS_SETTINGS is the closest and most reliable entry point.
             context.startActivity(intent)
         } catch (e: Exception) {
             // Safe fallback

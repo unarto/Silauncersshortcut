@@ -8,13 +8,15 @@ import android.os.Build
 import com.silauncer.cepat.cache.ShortcutCache
 
 // [app/src/main/java/com/silauncer/cepat/shortcut/ShortcutParser.kt]: Model & Ekstraksi ShortcutInfo
-// [Penjelasan]: Mengekstrak label, icon Drawable, dan ID dari object ShortcutInfo menggunakan ShortcutCache
+// [Penjelasan]: Mengekstrak label, icon Drawable, ID, dan Intent langsung dari ShortcutInfo/Manifest XML
 data class ParsedShortcut(
     val id: String,
     val packageName: String,
     val label: String,
     val icon: Drawable?,
-    val rawInfo: ShortcutInfo
+    val rawInfo: ShortcutInfo? = null,
+    val configInfo: android.content.pm.LauncherActivityInfo? = null,
+    val directIntent: android.content.Intent? = null
 )
 
 object ShortcutParser {
@@ -60,5 +62,38 @@ object ShortcutParser {
     fun parseList(context: Context, shortcuts: List<ShortcutInfo>): List<ParsedShortcut> {
         val density = context.resources.displayMetrics.densityDpi
         return shortcuts.map { parse(context, it, density) }
+    }
+
+    // [app/src/main/java/com/silauncer/cepat/shortcut/ShortcutParser.kt]: Konversi LauncherActivityInfo
+    // [Penjelasan]: Mengekstrak data dari pintasan konfigurasi (ShortcutConfigActivityInfo) untuk ditampilkan
+    fun parseConfig(context: Context, configInfo: android.content.pm.LauncherActivityInfo, density: Int): ParsedShortcut {
+        val label = configInfo.label?.toString() ?: configInfo.name
+        val cacheKey = "config:${configInfo.componentName.flattenToShortString()}"
+        
+        var iconDrawable: Drawable? = ShortcutCache.get(cacheKey)
+        if (iconDrawable == null) {
+            try {
+                iconDrawable = configInfo.getIcon(density)
+                if (iconDrawable != null) {
+                    ShortcutCache.put(cacheKey, iconDrawable)
+                }
+            } catch (e: Exception) {
+                iconDrawable = null
+            }
+        }
+        
+        return ParsedShortcut(
+            id = configInfo.name,
+            packageName = configInfo.componentName.packageName,
+            label = label,
+            icon = iconDrawable,
+            rawInfo = null,
+            configInfo = configInfo
+        )
+    }
+
+    fun parseConfigList(context: Context, configActivities: List<android.content.pm.LauncherActivityInfo>): List<ParsedShortcut> {
+        val density = context.resources.displayMetrics.densityDpi
+        return configActivities.map { parseConfig(context, it, density) }
     }
 }

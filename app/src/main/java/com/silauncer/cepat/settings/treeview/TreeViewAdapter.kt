@@ -81,6 +81,10 @@ class TreeViewAdapter(
                 val view = inflater.inflate(R.layout.item_tree_child_action, parent, false)
                 ActionViewHolder(view)
             }
+            NodeType.SLIDER -> {
+                val view = inflater.inflate(R.layout.item_tree_slider, parent, false)
+                SliderViewHolder(view)
+            }
         }
     }
 

@@ -161,6 +161,17 @@ class AppAdapter(
         }
 
         fun bind(app: AppInfo) {
+            val rv = recyclerView
+            if (rv != null && lastHeight > 0) {
+                val availableHeight = lastHeight - rv.paddingTop - rv.paddingBottom
+                val cellHeight = availableHeight / gridRows
+                if (itemView.layoutParams.height != cellHeight) {
+                    itemView.layoutParams = itemView.layoutParams.apply {
+                        height = cellHeight
+                    }
+                }
+            }
+            
             itemView.setPadding(iconSpacingPx, iconSpacingPx, iconSpacingPx, iconSpacingPx)
             
             if (iconView.layoutParams.width != iconSizePx || iconView.layoutParams.height != iconSizePx) {

@@ -196,3 +196,41 @@ class ActionViewHolder(itemView: View) : BaseTreeNodeViewHolder(itemView) {
     }
 }
 
+class SliderViewHolder(itemView: View) : BaseTreeNodeViewHolder(itemView) {
+    private val tvTitle: TextView = itemView.findViewById(R.id.tv_slider_title)
+    private val tvValue: TextView = itemView.findViewById(R.id.tv_slider_value)
+    private val seekBar: android.widget.SeekBar = itemView.findViewById(R.id.seek_bar_control)
+
+    override fun bind(node: TreeNode, onNodeClick: (TreeNode) -> Unit) {
+        tvTitle.text = node.title
+        
+        val min = node.sliderMin
+        val max = node.sliderMax
+        val step = node.sliderStep
+        val range = max - min
+        val steps = (range / step).toInt()
+        
+        seekBar.max = steps
+        
+        val currentValue = (node.value as? Float) ?: min
+        val currentStep = ((currentValue - min) / step).toInt()
+        seekBar.progress = currentStep
+        tvValue.text = String.format("%.0f", currentValue)
+
+        seekBar.setOnSeekBarChangeListener(object : android.widget.SeekBar.OnSeekBarChangeListener {
+            override fun onProgressChanged(seekBar: android.widget.SeekBar?, progress: Int, fromUser: Boolean) {
+                if (fromUser) {
+                    val newValue = min + (progress * step)
+                    tvValue.text = String.format("%.0f", newValue)
+                    node.value = newValue
+                    node.onSliderChange?.invoke(newValue)
+                }
+            }
+            override fun onStartTrackingTouch(seekBar: android.widget.SeekBar?) {}
+            override fun onStopTrackingTouch(seekBar: android.widget.SeekBar?) {
+                onNodeClick(node)
+            }
+        })
+    }
+}
+

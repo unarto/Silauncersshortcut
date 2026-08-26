@@ -21,14 +21,12 @@ class ShortcutKey(
     val packageName: String
         get() = componentName.packageName
 
-    fun buildRequest(context: android.content.Context): Any? {
-        return null // Placeholder if needed
-    }
-
     companion object {
         const val EXTRA_SHORTCUT_ID = "shortcut_id"
         private const val INTENT_CATEGORY = "com.android.launcher3.DEEP_SHORTCUT"
 
+        // [app/src/main/java/com/silauncer/cepat/shortcut/ShortcutKey.kt]: Factory Instance ShortcutKey
+        // [Penjelasan]: Membuat instance ShortcutKey resmi dari data ShortcutInfo OS
         fun fromInfo(shortcutInfo: ShortcutInfo): ShortcutKey {
             return ShortcutKey(
                 shortcutInfo.`package`,
@@ -37,11 +35,8 @@ class ShortcutKey(
             )
         }
 
-        fun fromIntent(intent: Intent, user: UserHandle): ShortcutKey {
-            val shortcutId = intent.getStringExtra(EXTRA_SHORTCUT_ID) ?: ""
-            return ShortcutKey(intent.`package` ?: "", user, shortcutId)
-        }
-
+        // [app/src/main/java/com/silauncer/cepat/shortcut/ShortcutKey.kt]: Intent Factory Shortcut
+        // [Penjelasan]: Membangun Intent resmi untuk peluncuran deep shortcut AOSP
         fun makeIntent(shortcutId: String, packageName: String): Intent {
             return Intent(Intent.ACTION_MAIN)
                 .addCategory(INTENT_CATEGORY)

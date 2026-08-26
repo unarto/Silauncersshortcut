@@ -15,6 +15,7 @@ import com.silauncer.cepat.shortcut.ShortcutFetcher
 import com.silauncer.cepat.shortcut.ShortcutLauncher
 import com.silauncer.cepat.shortcut.ShortcutParser
 import com.silauncer.cepat.notification.NotificationStateManager
+import com.silauncer.cepat.util.dpToPx
 
 // [app/src/main/java/com/silauncer/cepat/popup/PopupController.kt]: Pengelola Lifecycle PopupWindow
 // [Penjelasan]: Mengontrol penampilan, animasi, penghitungan posisi, dan dismiss popup saat touch outside
@@ -132,7 +133,7 @@ class PopupController(private val context: Context) {
         val location = IntArray(2)
         targetView.getLocationOnScreen(location)
         val targetCenterX = location[0] + targetView.width / 2
-        val arrowWidth = 24 * displayMetrics.density
+        val arrowWidth = context.resources.getDimension(R.dimen.popup_arrow_width)
         val rawArrowOffset = (targetCenterX - pos.x) - (arrowWidth / 2)
         val minArrowX = marginPx.toFloat()
         val maxArrowX = (popupWidth - arrowWidth - marginPx).coerceAtLeast(minArrowX)
@@ -174,13 +175,15 @@ class PopupController(private val context: Context) {
         }
     }
 
+    // [app/src/main/java/com/silauncer/cepat/popup/PopupController.kt]: Aksi Bagikan Tautan Aplikasi
+    // [Penjelasan]: Menggunakan string format resmi url_play_store_format dari strings.xml untuk tautan Google Play Store
     private fun shareApp(packageName: String) {
         try {
             val shareIntent = Intent(Intent.ACTION_SEND).apply {
                 type = "text/plain"
                 putExtra(
                     Intent.EXTRA_TEXT,
-                    "https://play.google.com/store/apps/details?id=$packageName"
+                    context.getString(R.string.url_play_store_format, packageName)
                 )
                 addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             }

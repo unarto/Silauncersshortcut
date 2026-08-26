@@ -71,10 +71,8 @@ object ShortcutFetcher {
                 } catch (e: Exception) {
                     resolveInfo.activityInfo
                 }
-                val metaData = actInfo?.metaData ?: continue
-                if (metaData.containsKey("android.app.shortcuts")) {
-                    val resId = metaData.getInt("android.app.shortcuts")
-                    if (resId != 0 && !xmlResIds.contains(resId)) {
+                extractShortcutXmlResId(actInfo?.metaData)?.let { resId ->
+                    if (!xmlResIds.contains(resId)) {
                         xmlResIds.add(resId)
                     }
                 }
@@ -86,10 +84,8 @@ object ShortcutFetcher {
                     val actList = pkgInfo.activities
                     if (actList != null) {
                         for (a in actList) {
-                            val meta = a.metaData ?: continue
-                            if (meta.containsKey("android.app.shortcuts")) {
-                                val resId = meta.getInt("android.app.shortcuts")
-                                if (resId != 0 && !xmlResIds.contains(resId)) {
+                            extractShortcutXmlResId(a.metaData)?.let { resId ->
+                                if (!xmlResIds.contains(resId)) {
                                     xmlResIds.add(resId)
                                 }
                             }
@@ -226,5 +222,15 @@ object ShortcutFetcher {
             // Ignore exception
         }
         return emptyList()
+    }
+
+    // [app/src/main/java/com/silauncer/cepat/shortcut/ShortcutFetcher.kt]: Ekstraksi ResId Shortcut XML Metadata
+    // [Penjelasan]: Helper terpusat untuk membaca resource ID android.app.shortcuts dari metadata activity/package
+    private fun extractShortcutXmlResId(metaData: android.os.Bundle?): Int? {
+        if (metaData != null && metaData.containsKey("android.app.shortcuts")) {
+            val resId = metaData.getInt("android.app.shortcuts")
+            if (resId != 0) return resId
+        }
+        return null
     }
 }

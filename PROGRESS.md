@@ -1,6 +1,41 @@
 # Status Proyek Silauncer
 
 ## Sedang Dikerjakan / Selesai:
+- [x] Eksekusi Perbaikan Kode audit1.md - FASE 2 (Pembersihan Mock Data, Dynamic Shortcuts AOSP, & Pengaturan Kustom UI) (SELESAI)
+  - **Kategori 4 (Pembersihan Data Mock & Integrasi Real Dynamic Shortcuts AOSP)**:
+    - Verifikasi dan pembersihan total mock data / data tiruan pada subsistem shortcuts & popup.
+    - Integrasi penuh `LauncherApps.getShortcuts()`, `ShortcutKey`, `ShortcutConfigActivityInfo`, dan parsing manifest XML APK asli.
+    - Menghilangkan pembatasan tunggal notifikasi pada `SmartPopupView.kt` dengan menambahkan indikator penghitung jumlah notifikasi dinamis (`+N lainnya`).
+  - **Kategori 5 (Penghapusan Hardcoded Layout, Strings, & Dynamic Cell Bounds)**:
+    - Menghapus hardcoded string pada `SettingsNodeFactory.kt` (menggunakan resource string `pref_grid_columns` dan `pref_grid_rows`).
+    - Menstandarkan batas slider (min, max, step) menggunakan konstanta terpusat di `SettingsNodeFactory`.
+    - Menghapus dimensi DP hardcoded pada `SmartPopupView.kt` dan menggantinya dengan referensi dimensi XML di `res/values/dimens.xml`.
+    - Menghapus hardcoded Google Play URL pada `PopupController.kt` dengan `url_play_store_format` dari `strings.xml`.
+    - Mengimplementasikan kalkulasi dinamis tinggi sel di `AppAdapter.kt`: `Tinggi Sel = maxOf(availableHeight / gridRows, Ukuran Ikon + Vertical Padding + Estimasi Tinggi Teks Label + Spacing)`.
+    - Memastikan `clipToPadding="false"` dan `clipChildren="false"` aktif pada container `RecyclerView` dan item view.
+    - Menambahkan panggilan `requestLayout()` dan `invalidate()` secara real-time pada `onResume()` `LauncherActivity` dan `updateConfig()` `AppAdapter`.
+  - **Validasi Build & Unit Test**:
+    - `compile_applet`: PASS (Build Succeeded).
+    - `gradle :app:testDebugUnitTest`: 100% PASS (BUILD SUCCESSFUL, 34 tasks).
+    - Seluruh file tetap di bawah batas wajib 500 baris.
+
+- [x] Eksekusi Perbaikan Kode audit1.md - FASE 1 (Pembersihan Dead/Unused Code & Kode Duplikat) (SELESAI)
+  - **Kategori 1 (Pembersihan Kode Mati / Dead Code)**:
+    - Menghapus method stub kosong `buildRequest` dan method factory tak terjangkau `fromIntent` pada `ShortcutKey.kt`.
+    - Menghapus komponen terisolasi `ShortcutPickerActivity.kt`, `ShortcutPickerAdapter.kt`, `activity_shortcut_picker.xml`, `item_shortcut_picker.xml`, serta menghapus deklarasi dari `AndroidManifest.xml`.
+  - **Kategori 2 (Pembersihan Kode & Resource Tidak Digunakan)**:
+    - Menghapus string resource tak terpakai dari `res/values/strings.xml` (`pref_grid_layout`, `pref_grid_layout_desc`, `action_app_storage`).
+    - Merapikan struktur dan dokumentasi pemetaan pada `IconPackRepository.kt`.
+  - **Kategori 3 (Refactor Kode Duplikat)**:
+    - Membuat utilitas terpusat `com.silauncer.cepat.util.DensityExtensions.kt` untuk konversi DP/SP ke Pixel.
+    - Menghapus duplikasi kalkulasi `dpToPx` lokal pada `LauncherActivity.kt` dan `PopupController.kt`.
+    - Menyatukan alur ekstraksi ikon pada `SettingsNodeFactory.kt` agar konsisten menggunakan `IconCache` dan `IconPackRepository`.
+    - Menyederhanakan dan menyatukan loop inspeksi metadata XML shortcuts pada `ShortcutFetcher.kt` (`extractShortcutXmlResId`).
+  - **Validasi Build & Unit Test**:
+    - `compile_applet`: PASS (Build Succeeded).
+    - `gradle :app:testDebugUnitTest`: 100% PASS (BUILD SUCCESSFUL).
+    - Batas 500 baris per file: Terpenuhi seluruhnya (semua file di bawah 500 baris).
+
 - [x] Perbaikan UI Pengaturan (Ganti Dropdown Kaku ke Slider Kustom)
   - Slider telah diimplementasikan untuk Ukuran Ikon, Jarak Antar Ikon, Ukuran Teks Label, Kolom dan Baris.
 - [x] Aturan Penyimpanan Data Strict (Zero Ambiguity)

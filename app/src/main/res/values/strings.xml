@@ -18,8 +18,10 @@
     <!-- [app/src/main/res/values/strings.xml]: Pengaturan Grid & Tata Letak -->
     <string name="pref_category_grid">Grid &amp; Tata Letak</string>
     <string name="pref_category_grid_desc">Kustomisasi dimensi kisi kolom, baris, dan jarak antar ikon</string>
-    <string name="pref_grid_layout">Tata Letak Kisi</string>
-    <string name="pref_grid_layout_desc">Jumlah kolom dan baris aplikasi pada layar utama</string>
+    <string name="pref_grid_columns">Kolom (Columns)</string>
+    <string name="pref_grid_columns_desc">Jumlah kolom aplikasi pada layar utama</string>
+    <string name="pref_grid_rows">Baris (Rows)</string>
+    <string name="pref_grid_rows_desc">Jumlah baris aplikasi pada layar utama</string>
     <string name="pref_icon_spacing">Jarak Antar Ikon</string>
     <string name="pref_icon_spacing_desc">Margin pemisah vertikal dan horizontal antar item</string>
 
@@ -61,9 +63,10 @@
     <string name="pref_reset_layout_desc">Kembalikan semua pengaturan tata letak ke bawaan</string>
     <string name="pref_reset_layout_success">Pengaturan tata letak berhasil diatur ulang</string>
 
-    <!-- [app/src/main/res/values/strings.xml]: Aksi Popup Launcher -->
+    <!-- [app/src/main/res/values/strings.xml]: Aksi Popup Launcher & Notifikasi -->
     <string name="action_app_info">Info aplikasi</string>
-    <string name="action_app_storage">Penyimpanan</string>
     <string name="action_uninstall">Hapus</string>
     <string name="action_share">Bagikan</string>
+    <string name="url_play_store_format">https://play.google.com/store/apps/details?id=%1$s</string>
+    <string name="notifications_count_more">+%1$d lainnya</string>
 </resources>

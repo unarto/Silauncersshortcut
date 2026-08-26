@@ -99,14 +99,10 @@ class SmartPopupView @JvmOverloads constructor(
                 (cardSystemActionSingle as LinearLayout).orientation = HORIZONTAL
                 (cardSystemActionSingle as LinearLayout).gravity = android.view.Gravity.CENTER_VERTICAL
                 params.width = resources.getDimensionPixelSize(R.dimen.popup_card_width)
-                params.height = (44 * resources.displayMetrics.density).toInt()
-                cardSystemActionSingle.setPadding(
-                    (16 * resources.displayMetrics.density).toInt(),
-                    0,
-                    (16 * resources.displayMetrics.density).toInt(),
-                    0
-                )
-                tvParams.marginStart = (10 * resources.displayMetrics.density).toInt()
+                params.height = resources.getDimensionPixelSize(R.dimen.popup_single_action_height)
+                val padHoriz = resources.getDimensionPixelSize(R.dimen.popup_single_action_padding_horizontal)
+                cardSystemActionSingle.setPadding(padHoriz, 0, padHoriz, 0)
+                tvParams.marginStart = resources.getDimensionPixelSize(R.dimen.popup_single_action_margin_start)
                 tvParams.topMargin = 0
             } else {
                 // Format Vertical Compact (Screenshot 2 OKX Wallet)
@@ -114,14 +110,11 @@ class SmartPopupView @JvmOverloads constructor(
                 (cardSystemActionSingle as LinearLayout).gravity = android.view.Gravity.CENTER
                 params.width = LayoutParams.WRAP_CONTENT
                 params.height = LayoutParams.WRAP_CONTENT
-                cardSystemActionSingle.setPadding(
-                    (20 * resources.displayMetrics.density).toInt(),
-                    (12 * resources.displayMetrics.density).toInt(),
-                    (20 * resources.displayMetrics.density).toInt(),
-                    (12 * resources.displayMetrics.density).toInt()
-                )
+                val padHoriz = resources.getDimensionPixelSize(R.dimen.popup_single_action_vertical_padding_horizontal)
+                val padVert = resources.getDimensionPixelSize(R.dimen.popup_single_action_vertical_padding_vertical)
+                cardSystemActionSingle.setPadding(padHoriz, padVert, padHoriz, padVert)
                 tvParams.marginStart = 0
-                tvParams.topMargin = (4 * resources.displayMetrics.density).toInt()
+                tvParams.topMargin = resources.getDimensionPixelSize(R.dimen.popup_single_action_vertical_margin_top)
             }
             tvSingleAction.layoutParams = tvParams
             cardSystemActionSingle.layoutParams = params
@@ -142,10 +135,17 @@ class SmartPopupView @JvmOverloads constructor(
         }
     }
 
+    // [app/src/main/java/com/silauncer/cepat/popup/SmartPopupView.kt]: Penataan Kartu Notifikasi Nyata
+    // [Penjelasan]: Menampilkan judul dan isi pesan notifikasi teratas serta indikator jumlah bila terdapat lebih dari satu notifikasi aktif
     fun setupNotifications(notifications: List<NotificationItem>) {
         if (notifications.isNotEmpty()) {
             val firstNotif = notifications.first()
-            tvNotificationTitle.text = firstNotif.title
+            if (notifications.size > 1) {
+                val extraCount = notifications.size - 1
+                tvNotificationTitle.text = "${firstNotif.title} (${context.getString(R.string.notifications_count_more, extraCount)})"
+            } else {
+                tvNotificationTitle.text = firstNotif.title
+            }
             tvNotificationText.text = firstNotif.text
             cardNotificationsContainer.visibility = VISIBLE
         } else {

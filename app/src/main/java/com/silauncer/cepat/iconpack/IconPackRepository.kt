@@ -10,10 +10,14 @@ import java.util.concurrent.ConcurrentHashMap
 
 data class IconPackInfo(val packageName: String, val label: String)
 
+// [app/src/main/java/com/silauncer/cepat/iconpack/IconPackRepository.kt]: Repositori Icon Pack Standar AOSP/Nova/ADW
+// [Penjelasan]: Mengelola deteksi paket ikon pihak ketiga dan parsing pemetaan appfilter.xml secara aman
 object IconPackRepository {
     private val componentToDrawableName = ConcurrentHashMap<String, String>()
     private var loadedIconPack: String? = null
 
+    // [app/src/main/java/com/silauncer/cepat/iconpack/IconPackRepository.kt]: Pemindaian Icon Pack
+    // [Penjelasan]: Mengambil daftar Icon Pack yang terpasang di sistem menggunakan intent filter standar launcher
     fun getAvailableIconPacks(context: Context): List<IconPackInfo> {
         val pm = context.packageManager
         val iconPacks = mutableMapOf<String, IconPackInfo>()

@@ -14,6 +14,17 @@ import com.silauncer.cepat.storage.LauncherPreferences
 // [Penjelasan]: Membangun seluruh hirarki vertikal settings (zero dialog/popup) dari LauncherPreferences dan Context
 object SettingsNodeFactory {
 
+    const val SLIDER_COLUMNS_MIN = 3f
+    const val SLIDER_COLUMNS_MAX = 8f
+    const val SLIDER_ROWS_MIN = 3f
+    const val SLIDER_ROWS_MAX = 10f
+    const val SLIDER_SPACING_MIN = 0f
+    const val SLIDER_SPACING_MAX = 48f
+    const val SLIDER_ICON_SIZE_MIN = 32f
+    const val SLIDER_ICON_SIZE_MAX = 96f
+    const val SLIDER_LABEL_SIZE_MIN = 8f
+    const val SLIDER_LABEL_SIZE_MAX = 24f
+
     // [app/src/main/java/com/silauncer/cepat/settings/treeview/SettingsNodeFactory.kt]: Penerapan Bahasa Aplikasi
     // [Penjelasan]: Mengubah locale aplikasi secara langsung menggunakan AppCompatDelegate setApplicationLocales
     fun applyAppLanguage(languageCode: String) {
@@ -50,12 +61,12 @@ object SettingsNodeFactory {
             children = mutableListOf(
                 TreeNode(
                     id = "slider_grid_columns",
-                    title = "Kolom (Columns)",
+                    title = context.getString(R.string.pref_grid_columns),
                     nodeType = NodeType.SLIDER,
                     depth = 1,
                     value = prefs.gridColumns.toFloat(),
-                    sliderMin = 3f,
-                    sliderMax = 8f,
+                    sliderMin = SLIDER_COLUMNS_MIN,
+                    sliderMax = SLIDER_COLUMNS_MAX,
                     sliderStep = 1f,
                     onSliderChange = { value ->
                         prefs.gridColumns = value.toInt()
@@ -63,12 +74,12 @@ object SettingsNodeFactory {
                 ),
                 TreeNode(
                     id = "slider_grid_rows",
-                    title = "Baris (Rows)",
+                    title = context.getString(R.string.pref_grid_rows),
                     nodeType = NodeType.SLIDER,
                     depth = 1,
                     value = prefs.gridRows.toFloat(),
-                    sliderMin = 3f,
-                    sliderMax = 10f,
+                    sliderMin = SLIDER_ROWS_MIN,
+                    sliderMax = SLIDER_ROWS_MAX,
                     sliderStep = 1f,
                     onSliderChange = { value ->
                         prefs.gridRows = value.toInt()
@@ -80,8 +91,8 @@ object SettingsNodeFactory {
                     nodeType = NodeType.SLIDER,
                     depth = 1,
                     value = prefs.iconSpacing.toFloat(),
-                    sliderMin = 0f,
-                    sliderMax = 48f,
+                    sliderMin = SLIDER_SPACING_MIN,
+                    sliderMax = SLIDER_SPACING_MAX,
                     sliderStep = 2f,
                     onSliderChange = { value ->
                         prefs.iconSpacing = value.toInt()
@@ -162,8 +173,8 @@ object SettingsNodeFactory {
                     nodeType = NodeType.SLIDER,
                     depth = 1,
                     value = prefs.iconSize.toFloat(),
-                    sliderMin = 32f,
-                    sliderMax = 96f,
+                    sliderMin = SLIDER_ICON_SIZE_MIN,
+                    sliderMax = SLIDER_ICON_SIZE_MAX,
                     sliderStep = 4f,
                     onSliderChange = { value ->
                         prefs.iconSize = value.toInt()
@@ -186,8 +197,8 @@ object SettingsNodeFactory {
                     nodeType = NodeType.SLIDER,
                     depth = 1,
                     value = prefs.labelSize,
-                    sliderMin = 8f,
-                    sliderMax = 24f,
+                    sliderMin = SLIDER_LABEL_SIZE_MIN,
+                    sliderMax = SLIDER_LABEL_SIZE_MAX,
                     sliderStep = 1f,
                     onSliderChange = { value ->
                         prefs.labelSize = value
@@ -298,10 +309,18 @@ object SettingsNodeFactory {
         val hiddenAppNodes = sortedApps.map { app ->
             val pkg = app.componentName.packageName
             val isHidden = hiddenSet.contains(pkg)
-            val appIcon = IconCache.get(app.cacheKey) ?: try {
-                pm.getActivityIcon(app.componentName)
-            } catch (e: Exception) {
-                null
+            // [app/src/main/java/com/silauncer/cepat/settings/treeview/SettingsNodeFactory.kt]: Pemuatan Ikon Terpadu
+            // [Penjelasan]: Mengutamakan IconCache dan Icon Pack aktif sebelum memanggil Package Manager OS
+            val appIcon = IconCache.get(app.cacheKey) ?: run {
+                val iconPack = prefs.selectedIconPack
+                val packIcon = if (iconPack.isNotEmpty()) {
+                    IconPackRepository.getIcon(context, iconPack, app.componentName)
+                } else null
+                packIcon ?: try {
+                    pm.getActivityIcon(app.componentName)
+                } catch (e: Exception) {
+                    null
+                }
             }
             TreeNode(
                 id = "hidden_app_$pkg",

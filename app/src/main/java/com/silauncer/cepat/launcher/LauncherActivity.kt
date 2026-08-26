@@ -16,6 +16,7 @@ import com.silauncer.cepat.home.MaterialGridItemAnimator
 import com.silauncer.cepat.home.OverScroll
 import com.silauncer.cepat.storage.LauncherPreferences
 import com.silauncer.cepat.notification.NotificationStateManager
+import com.silauncer.cepat.util.dpToPx
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
@@ -112,6 +113,8 @@ class LauncherActivity : AppCompatActivity() {
         }
     }
 
+    // [app/src/main/java/com/silauncer/cepat/launcher/LauncherActivity.kt]: Sinkronisasi Pengaturan UI Real-Time
+    // [Penjelasan]: Memperbarui grid span count, konfigurasi adapter, dan memanggil requestLayout()/invalidate() saat kembali ke launcher
     override fun onResume() {
         super.onResume()
         if (recyclerView.layoutManager is GridLayoutManager) {
@@ -123,15 +126,13 @@ class LauncherActivity : AppCompatActivity() {
         val currentIconSizePx = dpToPx(prefs.iconSize)
         val currentSpacingPx = dpToPx(prefs.iconSpacing)
         adapter.updateConfig(currentIconSizePx, prefs.showAppLabel, prefs.labelSize, currentSpacingPx, prefs.gridRows, prefs.selectedIconPack)
+        recyclerView.requestLayout()
+        recyclerView.invalidate()
         
         if (isLoaded) {
             refreshAppsUI()
         }
     }
-
-    // [app/src/main/java/com/silauncer/cepat/launcher/LauncherActivity.kt]: Utilitas Konversi Satuan DP ke PX
-    // [Penjelasan]: Helper terpusat untuk menghitung konversi dimensi dp ke pixel berdasarkan kepadatan layar
-    private fun dpToPx(dp: Int): Int = (dp * resources.displayMetrics.density).toInt()
 
     override fun onDestroy() {
         super.onDestroy()

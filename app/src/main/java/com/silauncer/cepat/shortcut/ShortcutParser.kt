@@ -41,6 +41,9 @@ object ShortcutParser {
                     iconDrawable = launcherApps.getShortcutIconDrawable(shortcutInfo, density)
                 }
             } catch (e: Exception) {
+                // [app/src/main/java/com/silauncer/cepat/shortcut/ShortcutParser.kt]: Log icon loading error
+                // [Penjelasan]: Mencatat log error saat getShortcutIconDrawable gagal dimuat dari LauncherApps
+                android.util.Log.w("ShortcutParser", "Gagal memuat icon shortcut via LauncherApps untuk ${shortcutInfo.id}", e)
                 iconDrawable = null
             }
 
@@ -80,6 +83,9 @@ object ShortcutParser {
                     ShortcutCache.put(cacheKey, iconDrawable)
                 }
             } catch (e: Exception) {
+                // [app/src/main/java/com/silauncer/cepat/shortcut/ShortcutParser.kt]: Log config icon error
+                // [Penjelasan]: Mencatat log error saat configInfo.getIcon gagal dimuat
+                android.util.Log.w("ShortcutParser", "Gagal memuat icon config shortcut untuk ${configInfo.name}", e)
                 iconDrawable = null
             }
         }

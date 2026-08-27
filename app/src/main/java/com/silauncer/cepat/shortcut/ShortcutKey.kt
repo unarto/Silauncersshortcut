@@ -36,11 +36,6 @@ class ShortcutKey(
             )
         }
 
-        fun fromIntent(intent: Intent, user: UserHandle): ShortcutKey {
-            val shortcutId = intent.getStringExtra(EXTRA_SHORTCUT_ID) ?: ""
-            return ShortcutKey(intent.`package` ?: "", user, shortcutId)
-        }
-
         fun makeIntent(shortcutId: String, packageName: String): Intent {
             return Intent(Intent.ACTION_MAIN)
                 .addCategory(INTENT_CATEGORY)

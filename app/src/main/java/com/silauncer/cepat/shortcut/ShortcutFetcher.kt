@@ -16,6 +16,22 @@ import org.xmlpull.v1.XmlPullParser
 // [Penjelasan]: Menggunakan LauncherApps API resmi jika memiliki izin host, atau fallback membaca manifest shortcuts.xml asli dari APK
 object ShortcutFetcher {
 
+    // [app/src/main/java/com/silauncer/cepat/shortcut/ShortcutFetcher.kt]: Konstanta Tag dan Atribut XML Android
+    // [Penjelasan]: Menghindari string hardcoded pada XML Pull Parser shortcut manifest
+    private const val ANDROID_NS = "http://schemas.android.com/apk/res/android"
+    private const val META_DATA_SHORTCUTS = "android.app.shortcuts"
+    private const val TAG_SHORTCUT = "shortcut"
+    private const val TAG_INTENT = "intent"
+    private const val ATTR_SHORTCUT_ID = "shortcutId"
+    private const val ATTR_ENABLED = "enabled"
+    private const val ATTR_SHORT_LABEL = "shortcutShortLabel"
+    private const val ATTR_LONG_LABEL = "shortcutLongLabel"
+    private const val ATTR_ICON = "icon"
+    private const val ATTR_ACTION = "action"
+    private const val ATTR_TARGET_PACKAGE = "targetPackage"
+    private const val ATTR_TARGET_CLASS = "targetClass"
+    private const val ATTR_DATA = "data"
+
     fun getShortcuts(context: Context, packageName: String, userHandle: UserHandle? = null): List<ShortcutInfo> {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N_MR1) {
             return emptyList()
@@ -75,8 +91,8 @@ object ShortcutFetcher {
                     resolveInfo.activityInfo
                 }
                 val metaData = actInfo?.metaData ?: continue
-                if (metaData.containsKey("android.app.shortcuts")) {
-                    val resId = metaData.getInt("android.app.shortcuts")
+                if (metaData.containsKey(META_DATA_SHORTCUTS)) {
+                    val resId = metaData.getInt(META_DATA_SHORTCUTS)
                     if (resId != 0 && !xmlResIds.contains(resId)) {
                         xmlResIds.add(resId)
                     }
@@ -90,8 +106,8 @@ object ShortcutFetcher {
                     if (actList != null) {
                         for (a in actList) {
                             val meta = a.metaData ?: continue
-                            if (meta.containsKey("android.app.shortcuts")) {
-                                val resId = meta.getInt("android.app.shortcuts")
+                            if (meta.containsKey(META_DATA_SHORTCUTS)) {
+                                val resId = meta.getInt(META_DATA_SHORTCUTS)
                                 if (resId != 0 && !xmlResIds.contains(resId)) {
                                     xmlResIds.add(resId)
                                 }
@@ -119,16 +135,16 @@ object ShortcutFetcher {
                 while (eventType != XmlPullParser.END_DOCUMENT) {
                     if (eventType == XmlPullParser.START_TAG) {
                         val tagName = parser.name
-                        if (tagName == "shortcut") {
-                            currentShortcutId = parser.getAttributeValue("http://schemas.android.com/apk/res/android", "shortcutId")
-                                ?: parser.getAttributeValue(null, "shortcutId")
+                        if (tagName == TAG_SHORTCUT) {
+                            currentShortcutId = parser.getAttributeValue(ANDROID_NS, ATTR_SHORTCUT_ID)
+                                ?: parser.getAttributeValue(null, ATTR_SHORTCUT_ID)
 
-                            val enabledAttr = parser.getAttributeValue("http://schemas.android.com/apk/res/android", "enabled")
-                                ?: parser.getAttributeValue(null, "enabled")
+                            val enabledAttr = parser.getAttributeValue(ANDROID_NS, ATTR_ENABLED)
+                                ?: parser.getAttributeValue(null, ATTR_ENABLED)
                             isEnabled = enabledAttr?.toBoolean() ?: true
 
-                            val shortLabelRes = parser.getAttributeResourceValue("http://schemas.android.com/apk/res/android", "shortcutShortLabel", 0)
-                            val longLabelRes = parser.getAttributeResourceValue("http://schemas.android.com/apk/res/android", "shortcutLongLabel", 0)
+                            val shortLabelRes = parser.getAttributeResourceValue(ANDROID_NS, ATTR_SHORT_LABEL, 0)
+                            val longLabelRes = parser.getAttributeResourceValue(ANDROID_NS, ATTR_LONG_LABEL, 0)
 
                             var label: String? = null
                             if (shortLabelRes != 0) {
@@ -150,14 +166,14 @@ object ShortcutFetcher {
                                 }
                             }
                             if (label.isNullOrBlank()) {
-                                label = parser.getAttributeValue("http://schemas.android.com/apk/res/android", "shortcutShortLabel")
-                                    ?: parser.getAttributeValue("http://schemas.android.com/apk/res/android", "shortcutLongLabel")
-                                    ?: parser.getAttributeValue(null, "shortcutShortLabel")
-                                    ?: parser.getAttributeValue(null, "shortcutLongLabel")
+                                label = parser.getAttributeValue(ANDROID_NS, ATTR_SHORT_LABEL)
+                                    ?: parser.getAttributeValue(ANDROID_NS, ATTR_LONG_LABEL)
+                                    ?: parser.getAttributeValue(null, ATTR_SHORT_LABEL)
+                                    ?: parser.getAttributeValue(null, ATTR_LONG_LABEL)
                             }
                             currentLabel = label
 
-                            val iconRes = parser.getAttributeResourceValue("http://schemas.android.com/apk/res/android", "icon", 0)
+                            val iconRes = parser.getAttributeResourceValue(ANDROID_NS, ATTR_ICON, 0)
                             currentIcon = if (iconRes != 0) {
                                 try {
                                     androidx.core.content.res.ResourcesCompat.getDrawable(appRes, iconRes, null)
@@ -174,17 +190,17 @@ object ShortcutFetcher {
                             } else null
 
                             currentIntent = null
-                        } else if (tagName == "intent" && currentShortcutId != null) {
-                            val action = parser.getAttributeValue("http://schemas.android.com/apk/res/android", "action")
-                                ?: parser.getAttributeValue(null, "action")
+                        } else if (tagName == TAG_INTENT && currentShortcutId != null) {
+                            val action = parser.getAttributeValue(ANDROID_NS, ATTR_ACTION)
+                                ?: parser.getAttributeValue(null, ATTR_ACTION)
                                 ?: Intent.ACTION_VIEW
-                            val targetPkg = parser.getAttributeValue("http://schemas.android.com/apk/res/android", "targetPackage")
-                                ?: parser.getAttributeValue(null, "targetPackage")
+                            val targetPkg = parser.getAttributeValue(ANDROID_NS, ATTR_TARGET_PACKAGE)
+                                ?: parser.getAttributeValue(null, ATTR_TARGET_PACKAGE)
                                 ?: packageName
-                            val targetCls = parser.getAttributeValue("http://schemas.android.com/apk/res/android", "targetClass")
-                                ?: parser.getAttributeValue(null, "targetClass")
-                            val dataUri = parser.getAttributeValue("http://schemas.android.com/apk/res/android", "data")
-                                ?: parser.getAttributeValue(null, "data")
+                            val targetCls = parser.getAttributeValue(ANDROID_NS, ATTR_TARGET_CLASS)
+                                ?: parser.getAttributeValue(null, ATTR_TARGET_CLASS)
+                            val dataUri = parser.getAttributeValue(ANDROID_NS, ATTR_DATA)
+                                ?: parser.getAttributeValue(null, ATTR_DATA)
 
                             val intent = Intent(action)
                             if (targetCls != null) {
@@ -199,7 +215,7 @@ object ShortcutFetcher {
                             currentIntent = intent
                         }
                     } else if (eventType == XmlPullParser.END_TAG) {
-                        if (parser.name == "shortcut" && currentShortcutId != null && isEnabled) {
+                        if (parser.name == TAG_SHORTCUT && currentShortcutId != null && isEnabled) {
                             if (!currentLabel.isNullOrBlank()) {
                                 result.add(
                                     ParsedShortcut(

@@ -57,7 +57,6 @@
     <string name="pref_reset_layout_success">Pengaturan tata letak berhasil diatur ulang</string>
 
     <!-- [app/src/main/res/values/strings.xml]: Aksi Popup Launcher -->
-    <string name="title_shortcut_picker">Pilih Pintasan Konfigurasi</string>
     <string name="action_app_info">Info aplikasi</string>
     <string name="action_uninstall">Hapus</string>
     <string name="action_share">Bagikan</string>

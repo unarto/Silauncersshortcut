@@ -37,6 +37,9 @@ object ShortcutLauncher {
                 context.startActivity(intent)
                 true
             } catch (e: Exception) {
+                // [app/src/main/java/com/silauncer/cepat/shortcut/ShortcutLauncher.kt]: Log kegagalan Direct Intent
+                // [Penjelasan]: Mencatat log error saat direct intent shortcut gagal dieksekusi
+                android.util.Log.e("ShortcutLauncher", "Gagal meluncurkan directIntent untuk ${shortcut.id}", e)
                 false
             }
         }
@@ -113,8 +116,14 @@ object ShortcutLauncher {
                 context.startActivity(intent)
                 true
             } catch (e: android.content.ActivityNotFoundException) {
+                // [app/src/main/java/com/silauncer/cepat/shortcut/ShortcutLauncher.kt]: Log ActivityNotFoundException
+                // [Penjelasan]: Mencatat log error saat config activity shortcut tidak ditemukan
+                android.util.Log.e("ShortcutLauncher", "Activity konfigurasi shortcut tidak ditemukan: ${configInfo.componentName}", e)
                 false
             } catch (e: SecurityException) {
+                // [app/src/main/java/com/silauncer/cepat/shortcut/ShortcutLauncher.kt]: Log SecurityException
+                // [Penjelasan]: Mencatat log error saat aplikasi tidak memiliki izin menjalankan config activity
+                android.util.Log.e("ShortcutLauncher", "Tidak memiliki izin meluncurkan shortcut config activity: ${configInfo.componentName}", e)
                 false
             }
         }
@@ -130,6 +139,9 @@ object ShortcutLauncher {
                         return true
                     }
                 } catch (e: Exception) {
+                    // [app/src/main/java/com/silauncer/cepat/shortcut/ShortcutLauncher.kt]: Log IntentSender Exception
+                    // [Penjelasan]: Mencatat log error saat peluncuran intentSender konfigurasi pintasan gagal
+                    android.util.Log.e("ShortcutLauncher", "Gagal menjalankan intentSender untuk config shortcut: ${configInfo.componentName}", e)
                     return false
                 }
             }

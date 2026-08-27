@@ -13,6 +13,7 @@
 | Unit Test Suite | SELESAI | PASS | `:app:testDebugUnitTest` 100% PASS |
 | Android Lint Validation | SELESAI | PASS | `:app:lintDebug` 0 errors |
 | Perbaikan Audit Modul Shortcut Pintar (shortcut.md) | SELESAI | PASS | Pembersihan dead code picker, eliminasi silent catch, refaktor XML konstanta |
+| Penyempurnaan UX Shortcut & Bug Kedip | SELESAI | PASS | Menyembunyikan opsi shortcut jika Silauncer bukan Default Launcher, nonaktifkan animasi Activity untuk mencegah screen blink |
 | Perbaikan Tangkapan Senyap (audit3.md) | SELESAI | PASS | Menambahkan Log.w pada `PopupController.kt` dan `LauncherActivity.kt` |
 | Pembersihan Hardcoded String (audit3.md) | SELESAI | PASS | Ekstraksi konstan di `SettingsNodeFactory.kt` & `IconPackRepository.kt` |
 | Perbaikan Tampilan Laci Aplikasi (auditpengaturan.md) | SELESAI | PASS | Memperbaiki UI TreeView squished dengan batas maxWidth dan penyederhanaan UX string |

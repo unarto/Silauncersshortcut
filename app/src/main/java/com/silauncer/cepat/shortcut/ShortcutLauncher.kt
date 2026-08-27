@@ -34,8 +34,18 @@ object ShortcutLauncher {
                     }
                     addFlags(android.content.Intent.FLAG_ACTIVITY_NEW_TASK)
                 }
-                context.startActivity(intent)
+                
+                // [app/src/main/java/com/silauncer/cepat/shortcut/ShortcutLauncher.kt]: Nonaktifkan Animasi Transisi
+                // [Penjelasan]: Mencegah bug kedip (blink) di launcher dengan menonaktifkan animasi masuk/keluar untuk activity transparan
+                val options = android.app.ActivityOptions.makeCustomAnimation(context, 0, 0).toBundle()
+                context.startActivity(intent, options)
                 true
+            } catch (e: SecurityException) {
+                // [app/src/main/java/com/silauncer/cepat/shortcut/ShortcutLauncher.kt]: Toast Peringatan SecurityException
+                // [Penjelasan]: Menampilkan peringatan Toast kepada pengguna agar tidak terjadi "harapan palsu" tanpa respon
+                android.util.Log.e("ShortcutLauncher", "SecurityException saat directIntent: ${shortcut.id}", e)
+                android.widget.Toast.makeText(context, "Silauncer harus menjadi Default Launcher", android.widget.Toast.LENGTH_SHORT).show()
+                false
             } catch (e: Exception) {
                 // [app/src/main/java/com/silauncer/cepat/shortcut/ShortcutLauncher.kt]: Log kegagalan Direct Intent
                 // [Penjelasan]: Mencatat log error saat direct intent shortcut gagal dieksekusi
@@ -56,19 +66,20 @@ object ShortcutLauncher {
         // Pemetaan AOSP ShortcutKey
         val shortcutKey = ShortcutKey.fromInfo(shortcutInfo)
         val targetUser = userHandle ?: shortcutKey.user
+        val options = android.app.ActivityOptions.makeCustomAnimation(context, 0, 0).toBundle()
 
         // 1. Eksekusi melalui LauncherApps.startShortcut (Metode Resmi Launcher OS)
         if (launcherApps != null && launcherApps.hasShortcutHostPermission()) {
             try {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-                    launcherApps.startShortcut(shortcutInfo, sourceBounds, null)
+                    launcherApps.startShortcut(shortcutInfo, sourceBounds, options)
                     return true
                 } else {
                     launcherApps.startShortcut(
                         shortcutKey.packageName,
                         shortcutKey.id,
                         sourceBounds,
-                        null,
+                        options,
                         targetUser
                     )
                     return true
@@ -87,7 +98,7 @@ object ShortcutLauncher {
                     this.sourceBounds = sourceBounds
                 }
             }
-            context.startActivity(intent)
+            context.startActivity(intent, options)
             true
         } catch (e: Exception) {
             // [app/src/main/java/com/silauncer/cepat/shortcut/ShortcutLauncher.kt]: Log kegagalan Intent fallback

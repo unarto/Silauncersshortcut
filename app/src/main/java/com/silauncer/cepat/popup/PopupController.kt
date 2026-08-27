@@ -25,25 +25,38 @@ class PopupController(private val context: Context) {
         dismiss()
         val smartPopupView = SmartPopupView(context)
 
-        // Fetch dynamic shortcuts
-        val rawShortcuts = ShortcutFetcher.getShortcuts(context, appInfo.packageName, appInfo.user)
+        val parsedShortcuts = mutableListOf<com.silauncer.cepat.shortcut.ParsedShortcut>()
         
-        val parsedShortcuts = if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N_MR1) {
-            ShortcutParser.parseList(context, rawShortcuts).toMutableList()
+        // [app/src/main/java/com/silauncer/cepat/popup/PopupController.kt]: Pengecekan Izin Default Launcher
+        // [Penjelasan]: Hanya memuat dan menampilkan shortcut jika Silauncer memiliki izin akses (disetel sebagai default launcher), untuk menghindari "harapan palsu" / SecurityException.
+        val launcherApps = context.getSystemService(Context.LAUNCHER_APPS_SERVICE) as? android.content.pm.LauncherApps
+        val hasPermission = if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+            launcherApps?.hasShortcutHostPermission() == true
         } else {
-            mutableListOf()
-        }
-        
-        // If dynamic shortcuts are empty, check static manifest shortcuts from APK resources
-        if (parsedShortcuts.isEmpty()) {
-            val manifestShortcuts = ShortcutFetcher.getManifestShortcutsFromXml(context, appInfo.packageName)
-            parsedShortcuts.addAll(manifestShortcuts)
+            launcherApps?.hasShortcutHostPermission() == true
         }
 
-        // Fetch config shortcuts
-        val rawConfigShortcuts = ShortcutFetcher.getConfigShortcuts(context, appInfo.packageName, appInfo.user)
-        val parsedConfigShortcuts = ShortcutParser.parseConfigList(context, rawConfigShortcuts)
-        parsedShortcuts.addAll(parsedConfigShortcuts)
+        if (hasPermission) {
+            // Fetch dynamic shortcuts
+            val rawShortcuts = ShortcutFetcher.getShortcuts(context, appInfo.packageName, appInfo.user)
+            val dynamicParsed = if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N_MR1) {
+                ShortcutParser.parseList(context, rawShortcuts)
+            } else {
+                emptyList()
+            }
+            parsedShortcuts.addAll(dynamicParsed)
+
+            // If dynamic shortcuts are empty, check static manifest shortcuts from APK resources
+            if (parsedShortcuts.isEmpty()) {
+                val manifestShortcuts = ShortcutFetcher.getManifestShortcutsFromXml(context, appInfo.packageName)
+                parsedShortcuts.addAll(manifestShortcuts)
+            }
+
+            // Fetch config shortcuts
+            val rawConfigShortcuts = ShortcutFetcher.getConfigShortcuts(context, appInfo.packageName, appInfo.user)
+            val parsedConfigShortcuts = ShortcutParser.parseConfigList(context, rawConfigShortcuts)
+            parsedShortcuts.addAll(parsedConfigShortcuts)
+        }
 
         smartPopupView.setupShortcuts(parsedShortcuts)
         

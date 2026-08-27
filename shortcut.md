@@ -50,3 +50,24 @@ Setelah dilakukan penelusuran menyeluruh ke seluruh codebase launcher dan settin
   - Komentar wajib `[Jalur Class/Modul]` dan `[Penjelasan]` disertakan pada setiap blok perubahan.
   - SRP dan batasan baris (< 500 baris) tetap terjaga.
   - Zero mock/fake: seluruh shortcut beroperasi langsung di atas API Android asli (`LauncherApps`, `ShortcutInfo`, dan XML Resource Parser).
+
+---
+
+## 5. Audit Bug: Shortcut Gagal Dieksekusi (v2rayNG "Start Services" dll)
+Berdasarkan keluhan dan screenshot yang menampilkan shortcut v2rayNG gagal dieksekusi, berikut adalah temuan akar masalahnya:
+
+1. **Silauncer Bukan Default Launcher (Tidak Ada Host Permission)**: 
+   Sistem operasi Android mengunci akses `LauncherApps.getShortcuts()` hanya untuk aplikasi yang disetel sebagai "Default Launcher". Karena Silauncer tidak berstatus default launcher, fungsi resmi tersebut gagal dieksekusi.
+
+2. **Keterbatasan Metode Fallback Parsing XML**: 
+   Karena API resmi diblokir, Silauncer melakukan *fallback* dengan membaca isi file `AndroidManifest.xml` dan `shortcuts.xml` dari APK target secara paksa (melalui `ShortcutFetcher.getManifestShortcutsFromXml`). Aplikasi kemudian membuat `directIntent` buatan.
+   Sayangnya, sebagian besar target dari shortcut statis seperti *Start Services* atau *Stop Services* merupakan Service/Activity yang **TIDAK DIEKSPOR** (`android:exported="false"`). Fitur tersebut didesain hanya boleh dieksekusi oleh OS dan Default Launcher demi alasan keamanan.
+
+3. **SecurityException & Penangkapan Senyap (Silent Catch)**:
+   Saat Anda menekan tombol *Start Services* di Silauncer, aplikasi Silauncer berusaha memanggil `context.startActivity(directIntent)`. Karena target tidak diekspor, sistem Android akan langsung menolaknya dengan melempar `SecurityException`.
+   Pada file `ShortcutLauncher.kt` (baris 37), error ini hanya ditangkap (*silent catch*) ke dalam sistem log Logcat tanpa memberikan umpan balik (misal: *Toast*) ke layar, sehingga tombol terlihat seperti tidak merespon/rusak.
+
+**Rekomendasi Perbaikan:**
+Untuk memperbaiki antarmuka UX tanpa membuat *hack* ilegal yang membahayakan device, saya merekomendasikan hal berikut:
+1. **(Solusi UX Utama)** Menambahkan pesan `Toast` peringatan (*"Gagal meluncurkan shortcut. Jadikan Silauncer sebagai Default Launcher"*) di blok catch pada `ShortcutLauncher.kt` jika intent mengalami `SecurityException`.
+2. Jika perlu, sistem dapat dimodifikasi untuk menyembunyikan daftar menu shortcut apabila Silauncer terdeteksi belum memiliki akses `hasShortcutHostPermission()`.

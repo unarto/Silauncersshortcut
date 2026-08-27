@@ -15,3 +15,4 @@
 | Perbaikan Audit Modul Shortcut Pintar (shortcut.md) | SELESAI | PASS | Pembersihan dead code picker, eliminasi silent catch, refaktor XML konstanta |
 | Perbaikan Tangkapan Senyap (audit3.md) | SELESAI | PASS | Menambahkan Log.w pada `PopupController.kt` dan `LauncherActivity.kt` |
 | Pembersihan Hardcoded String (audit3.md) | SELESAI | PASS | Ekstraksi konstan di `SettingsNodeFactory.kt` & `IconPackRepository.kt` |
+| Perbaikan Tampilan Laci Aplikasi (auditpengaturan.md) | SELESAI | PASS | Memperbaiki UI TreeView squished dengan batas maxWidth dan penyederhanaan UX string |

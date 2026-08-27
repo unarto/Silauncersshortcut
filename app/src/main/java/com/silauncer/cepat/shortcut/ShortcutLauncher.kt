@@ -71,7 +71,9 @@ object ShortcutLauncher {
                     return true
                 }
             } catch (e: Exception) {
-                // Ignore exception and proceed to fallback
+                // [app/src/main/java/com/silauncer/cepat/shortcut/ShortcutLauncher.kt]: Log kegagalan LauncherApps startShortcut
+                // [Penjelasan]: Mencatat log error saat LauncherApps API gagal meluncurkan shortcut sebelum masuk ke fallback intent
+                android.util.Log.e("ShortcutLauncher", "Gagal startShortcut via LauncherApps untuk ${shortcutKey.packageName}/${shortcutKey.id}", e)
             }
         }
 
@@ -85,6 +87,9 @@ object ShortcutLauncher {
             context.startActivity(intent)
             true
         } catch (e: Exception) {
+            // [app/src/main/java/com/silauncer/cepat/shortcut/ShortcutLauncher.kt]: Log kegagalan Intent fallback
+            // [Penjelasan]: Mencatat log error saat fallback DEEP_SHORTCUT intent gagal dijalankan
+            android.util.Log.e("ShortcutLauncher", "Gagal meluncurkan shortcut fallback intent untuk ${shortcutInfo.id}", e)
             false
         }
     }

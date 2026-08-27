@@ -25,8 +25,9 @@ class ShortcutKey(
         const val EXTRA_SHORTCUT_ID = "shortcut_id"
         private const val INTENT_CATEGORY = "com.android.launcher3.DEEP_SHORTCUT"
 
-        // [app/src/main/java/com/silauncer/cepat/shortcut/ShortcutKey.kt]: Factory Instance ShortcutKey
-        // [Penjelasan]: Membuat instance ShortcutKey resmi dari data ShortcutInfo OS
+        // [app/src/main/java/com/silauncer/cepat/shortcut/ShortcutKey.kt]: Keamanan API ShortcutInfo
+        // [Penjelasan]: Menambahkan RequiresApi karena ShortcutInfo hanya tersedia mulai dari API 25 (N_MR1), menghindari error panggilan pada perangkat lama.
+        @androidx.annotation.RequiresApi(android.os.Build.VERSION_CODES.N_MR1)
         fun fromInfo(shortcutInfo: ShortcutInfo): ShortcutKey {
             return ShortcutKey(
                 shortcutInfo.`package`,
@@ -35,8 +36,11 @@ class ShortcutKey(
             )
         }
 
-        // [app/src/main/java/com/silauncer/cepat/shortcut/ShortcutKey.kt]: Intent Factory Shortcut
-        // [Penjelasan]: Membangun Intent resmi untuk peluncuran deep shortcut AOSP
+        fun fromIntent(intent: Intent, user: UserHandle): ShortcutKey {
+            val shortcutId = intent.getStringExtra(EXTRA_SHORTCUT_ID) ?: ""
+            return ShortcutKey(intent.`package` ?: "", user, shortcutId)
+        }
+
         fun makeIntent(shortcutId: String, packageName: String): Intent {
             return Intent(Intent.ACTION_MAIN)
                 .addCategory(INTENT_CATEGORY)
@@ -45,6 +49,7 @@ class ShortcutKey(
                 .putExtra(EXTRA_SHORTCUT_ID, shortcutId)
         }
         
+        @androidx.annotation.RequiresApi(android.os.Build.VERSION_CODES.N_MR1)
         fun makeIntent(si: ShortcutInfo): Intent {
             return makeIntent(si.id, si.`package`).apply {
                 component = si.activity

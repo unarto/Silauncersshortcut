@@ -8,8 +8,8 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.silauncer.cepat.R
+import com.silauncer.cepat.apps.AppDataSource
 import com.silauncer.cepat.apps.AppInfo
-import com.silauncer.cepat.apps.GetInstalledAppsUseCase
 import com.silauncer.cepat.settings.treeview.SettingsNodeFactory
 import com.silauncer.cepat.settings.treeview.TreeNode
 import com.silauncer.cepat.settings.treeview.TreeViewAdapter
@@ -65,11 +65,11 @@ class SettingsActivity : AppCompatActivity() {
     }
 
     // [app/src/main/java/com/silauncer/cepat/settings/SettingsActivity.kt]: Memuat data awal pengaturan
-    // [Penjelasan]: Mengambil daftar aplikasi secara asinkron lalu membangun struktur pohon pengaturan
+    // [Penjelasan]: Menghapus dependensi redundant UseCase, langsung menggunakan AppDataSource untuk mendapatkan list aplikasi
     private fun loadInitialSettings() {
         lifecycleScope.launch {
-            val useCase = GetInstalledAppsUseCase(this@SettingsActivity)
-            cachedApps = useCase()
+            val appDataSource = AppDataSource(this@SettingsActivity)
+            cachedApps = appDataSource.getInstalledApps(null, android.os.Process.myUserHandle())
             buildAndApplyTree()
         }
     }

@@ -11,8 +11,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.silauncer.cepat.R
 import com.silauncer.cepat.apps.AppInfo
 import com.silauncer.cepat.cache.IconLoader
-import com.silauncer.cepat.util.dpToPx
-import com.silauncer.cepat.util.spToPx
 import kotlinx.coroutines.CoroutineScope
 
 class AppAdapter(
@@ -123,8 +121,6 @@ class AppAdapter(
         }
         if (changed) {
             notifyDataSetChanged()
-            recyclerView?.requestLayout()
-            recyclerView?.invalidate()
         }
     }
 
@@ -164,21 +160,14 @@ class AppAdapter(
             }
         }
 
-        // [app/src/main/java/com/silauncer/cepat/home/AppAdapter.kt]: Dynamic Cell Bounds Calculation
-        // [Penjelasan]: Menghitung tinggi sel dinamis (Ukuran Ikon + Vertical Padding + Estimasi Tinggi Teks + Spacing) untuk mencegah ikon atau teks label terpotong
         fun bind(app: AppInfo) {
             val rv = recyclerView
-            if (rv != null && lastHeight > 0 && gridRows > 0) {
+            if (rv != null && lastHeight > 0) {
                 val availableHeight = lastHeight - rv.paddingTop - rv.paddingBottom
-                val baseGridCellHeight = availableHeight / gridRows
-                val labelEstimatedHeightPx = if (showAppLabel) {
-                    (itemView.context.spToPx(labelSizeSp) * 2.5f).toInt()
-                } else 0
-                val minRequiredHeight = iconSizePx + (iconSpacingPx * 2) + labelEstimatedHeightPx + itemView.context.dpToPx(8)
-                val dynamicCellHeight = maxOf(baseGridCellHeight, minRequiredHeight)
-                if (itemView.layoutParams.height != dynamicCellHeight) {
+                val cellHeight = availableHeight / gridRows
+                if (itemView.layoutParams.height != cellHeight) {
                     itemView.layoutParams = itemView.layoutParams.apply {
-                        height = dynamicCellHeight
+                        height = cellHeight
                     }
                 }
             }
@@ -211,7 +200,8 @@ class AppAdapter(
             itemView.setOnClickListener { onClick(app) }
 
             // [app/src/main/java/com/silauncer/cepat/home/AppAdapter.kt]: Animasi sentuhan
-            // [Penjelasan]: Menambahkan efek scale (memantul/shrink) pada saat item disentuh
+            // [Penjelasan]: Menambahkan efek scale saat item disentuh, menggunakan SuppressLint karena setOnClickListener menangani aksi klik dan aksesibilitas aslinya
+            @android.annotation.SuppressLint("ClickableViewAccessibility")
             itemView.setOnTouchListener { v, event ->
                 when (event.action) {
                     android.view.MotionEvent.ACTION_DOWN -> {

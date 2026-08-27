@@ -1,8 +1,13 @@
 package com.silauncer.cepat.notification
 
+import android.content.Intent
+import android.os.Bundle
 import android.service.notification.NotificationListenerService
 import android.service.notification.StatusBarNotification
+import android.util.Log
 
+// [app/src/main/java/com/silauncer/cepat/notification/NotificationService.kt]: Service Pemantau Notifikasi
+// [Penjelasan]: Mengirimkan update notifikasi melalui broadcast intent internal aplikasi secara decoupled tanpa Global State/Manager
 class NotificationService : NotificationListenerService() {
 
     override fun onListenerConnected() {
@@ -51,9 +56,23 @@ class NotificationService : NotificationListenerService() {
                 entry.value.sortedByDescending { it.postTime } 
             }
             
-            NotificationStateManager.updateNotifications(sortedMap)
+            // [app/src/main/java/com/silauncer/cepat/notification/NotificationService.kt]: Broadcast Pembaruan Notifikasi
+            // [Penjelasan]: Mengirimkan notifikasi ke komponen UI melalui intent internal terdaftar dengan package name yang valid
+            val intent = Intent(ACTION_NOTIFICATION_UPDATE).apply {
+                setPackage(packageName)
+                val bundle = Bundle()
+                for ((pkg, list) in sortedMap) {
+                    bundle.putParcelableArrayList(pkg, ArrayList(list))
+                }
+                putExtras(bundle)
+            }
+            sendBroadcast(intent)
         } catch (e: Exception) {
-            // Safe catch
+            Log.e("NotificationService", "Gagal memperbarui notifikasi", e)
         }
+    }
+
+    companion object {
+        const val ACTION_NOTIFICATION_UPDATE = "com.silauncer.cepat.ACTION_NOTIFICATION_UPDATE"
     }
 }

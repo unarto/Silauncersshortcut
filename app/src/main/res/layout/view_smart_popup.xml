@@ -8,10 +8,14 @@
     android:orientation="vertical">
 
     <!-- Indikator Panah Atas -->
+    <!-- [app/src/main/res/layout/view_smart_popup.xml]: Panah Indikator Dekoratif Atas -->
+    <!-- [Penjelasan]: Menandai elemen grafis dekoratif dengan contentDescription null dan not important for accessibility -->
     <ImageView
         android:id="@+id/arrow_up"
         android:layout_width="24dp"
         android:layout_height="10dp"
+        android:contentDescription="@null"
+        android:importantForAccessibility="no"
         android:src="@drawable/popup_arrow_up"
         android:visibility="gone" />
 
@@ -206,10 +210,14 @@
     </LinearLayout>
 
     <!-- Indikator Panah Bawah -->
+    <!-- [app/src/main/res/layout/view_smart_popup.xml]: Panah Indikator Dekoratif Bawah -->
+    <!-- [Penjelasan]: Menandai elemen grafis dekoratif dengan contentDescription null dan not important for accessibility -->
     <ImageView
         android:id="@+id/arrow_down"
         android:layout_width="24dp"
         android:layout_height="10dp"
+        android:contentDescription="@null"
+        android:importantForAccessibility="no"
         android:src="@drawable/popup_arrow_down"
         android:visibility="gone" />
 

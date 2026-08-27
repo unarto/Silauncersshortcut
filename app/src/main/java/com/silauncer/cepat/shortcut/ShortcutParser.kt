@@ -21,6 +21,7 @@ data class ParsedShortcut(
 
 object ShortcutParser {
 
+    @androidx.annotation.RequiresApi(android.os.Build.VERSION_CODES.N_MR1)
     fun parse(context: Context, shortcutInfo: ShortcutInfo, density: Int): ParsedShortcut {
         val label = shortcutInfo.shortLabel?.toString()
             ?: shortcutInfo.longLabel?.toString()
@@ -59,6 +60,7 @@ object ShortcutParser {
         )
     }
 
+    @androidx.annotation.RequiresApi(android.os.Build.VERSION_CODES.N_MR1)
     fun parseList(context: Context, shortcuts: List<ShortcutInfo>): List<ParsedShortcut> {
         val density = context.resources.displayMetrics.densityDpi
         return shortcuts.map { parse(context, it, density) }

@@ -6,6 +6,8 @@ import android.content.Intent
 import android.content.IntentFilter
 import androidx.core.content.ContextCompat
 
+// [app/src/main/java/com/silauncer/cepat/apps/AppChangeReceiver.kt]: Penerima Broadcast Perubahan Paket
+// [Penjelasan]: Mendeteksi event pasang, hapus, dan perbarui paket aplikasi dari sistem operasi
 class AppChangeReceiver(
     private val onPackageEvent: (action: String?, packageName: String?, replacing: Boolean) -> Unit
 ) : BroadcastReceiver() {

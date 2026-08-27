@@ -1,6 +1,6 @@
 [versions]
 agp = "9.1.1"
-coreKtx = "1.18.0"
+coreKtx = "1.13.1"
 junit = "4.13.2"
 junitVersion = "1.3.0"
 espressoCore = "3.7.0"
@@ -11,9 +11,18 @@ runner = "1.6.2"
 kotlinxCoroutinesAndroid = "1.10.2"
 kotlinxCoroutinesCore = "1.10.2"
 robolectric = "4.16.1"
+dynamicanimation = "1.0.0"
+recyclerview = "1.3.2"
+appcompat = "1.7.0"
+mmkv = "2.4.1"
+room = "2.7.0-beta01"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
+androidx-dynamicanimation = { group = "androidx.dynamicanimation", name = "dynamicanimation", version.ref = "dynamicanimation" }
+androidx-recyclerview = { group = "androidx.recyclerview", name = "recyclerview", version.ref = "recyclerview" }
+androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
+tencent-mmkv = { group = "com.tencent", name = "mmkv", version.ref = "mmkv" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
 androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
@@ -24,9 +33,9 @@ androidx-runner = { group = "androidx.test", name = "runner", version.ref = "run
 kotlinx-coroutines-android = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-android", version.ref = "kotlinxCoroutinesAndroid" }
 kotlinx-coroutines-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref = "kotlinxCoroutinesCore" }
 robolectric = { group = "org.robolectric", name = "robolectric", version.ref = "robolectric" }
-androidx-room-runtime = { group = "androidx.room", name = "room-runtime", version = "2.7.0-beta01" }
-androidx-room-compiler = { group = "androidx.room", name = "room-compiler", version = "2.7.0-beta01" }
-androidx-room-ktx = { group = "androidx.room", name = "room-ktx", version = "2.7.0-beta01" }
+androidx-room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "room" }
+androidx-room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "room" }
+androidx-room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "room" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

@@ -1,6 +1,5 @@
 package com.silauncer.cepat.popup
 
-import android.graphics.Point
 import android.view.View
 
 // [app/src/main/java/com/silauncer/cepat/popup/PopupPositionCalculator.kt]: Kalkulator Posisi Popup

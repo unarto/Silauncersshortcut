@@ -53,11 +53,13 @@ android {
   }
 }
 dependencies {
-  implementation("androidx.dynamicanimation:dynamicanimation:1.0.0")
-  implementation("androidx.recyclerview:recyclerview:1.3.2")
-  implementation("androidx.appcompat:appcompat:1.7.0")
-  implementation("androidx.core:core-ktx:1.13.1")
-  implementation("com.tencent:mmkv:2.4.1")
+  // [app/build.gradle.kts]: Konfigurasi dependensi modular via Version Catalog
+  // [Penjelasan]: Mengganti dependensi hardcoded dengan referensi libs.versions.toml
+  implementation(libs.androidx.dynamicanimation)
+  implementation(libs.androidx.recyclerview)
+  implementation(libs.androidx.appcompat)
+  implementation(libs.androidx.core.ktx)
+  implementation(libs.tencent.mmkv)
   implementation(libs.androidx.lifecycle.runtime.ktx)
   implementation(libs.kotlinx.coroutines.android)
   implementation(libs.kotlinx.coroutines.core)

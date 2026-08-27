@@ -25,13 +25,6 @@ class TreeViewAdapter(
         notifyDataSetChanged()
     }
 
-    // [app/src/main/java/com/silauncer/cepat/settings/treeview/TreeViewAdapter.kt]: Refresh Tampilan TreeView
-    // [Penjelasan]: Membangun ulang list node yang tampak tanpa mereset status expand/collapse
-    fun refresh() {
-        rebuildVisibleNodes()
-        notifyDataSetChanged()
-    }
-
     // [app/src/main/java/com/silauncer/cepat/settings/treeview/TreeViewAdapter.kt]: Rekonstruksi daftar node tampak
     // [Penjelasan]: Memflatkan hirarki tree berdasarkan status isExpanded secara rekursif
     private fun rebuildVisibleNodes() {

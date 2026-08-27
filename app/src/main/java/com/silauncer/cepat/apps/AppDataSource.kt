@@ -7,6 +7,8 @@ import android.os.UserHandle
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
+// [app/src/main/java/com/silauncer/cepat/apps/AppDataSource.kt]: Sumber Data Aplikasi Terpasang
+// [Penjelasan]: Mengambil daftar aplikasi yang terpasang menggunakan LauncherApps API secara asinkron di IO thread
 class AppDataSource(private val context: Context) {
     private val launcherApps: LauncherApps? by lazy {
         try {

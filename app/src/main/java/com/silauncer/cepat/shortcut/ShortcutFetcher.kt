@@ -38,6 +38,7 @@ object ShortcutFetcher {
                 val result = try {
                     launcherApps.getShortcuts(query, targetUser)
                 } catch (e: Exception) {
+                    android.util.Log.e("ShortcutFetcher", "Gagal mengambil dynamic shortcuts", e)
                     null
                 }
                 if (!result.isNullOrEmpty()) {
@@ -45,7 +46,9 @@ object ShortcutFetcher {
                 }
             }
         } catch (e: Exception) {
-            // Ignore exception from LauncherApps
+            // [app/src/main/java/com/silauncer/cepat/shortcut/ShortcutFetcher.kt]: Logging penanganan error LauncherApps
+            // [Penjelasan]: Mencatat log kegagalan pengambilan shortcut dari LauncherApps alih-alih silent catch
+            android.util.Log.e("ShortcutFetcher", "Error saat mengakses LauncherApps getShortcuts untuk $packageName", e)
         }
 
         return launcherShortcuts.sortedBy { it.rank }
@@ -71,8 +74,10 @@ object ShortcutFetcher {
                 } catch (e: Exception) {
                     resolveInfo.activityInfo
                 }
-                extractShortcutXmlResId(actInfo?.metaData)?.let { resId ->
-                    if (!xmlResIds.contains(resId)) {
+                val metaData = actInfo?.metaData ?: continue
+                if (metaData.containsKey("android.app.shortcuts")) {
+                    val resId = metaData.getInt("android.app.shortcuts")
+                    if (resId != 0 && !xmlResIds.contains(resId)) {
                         xmlResIds.add(resId)
                     }
                 }
@@ -84,15 +89,19 @@ object ShortcutFetcher {
                     val actList = pkgInfo.activities
                     if (actList != null) {
                         for (a in actList) {
-                            extractShortcutXmlResId(a.metaData)?.let { resId ->
-                                if (!xmlResIds.contains(resId)) {
+                            val meta = a.metaData ?: continue
+                            if (meta.containsKey("android.app.shortcuts")) {
+                                val resId = meta.getInt("android.app.shortcuts")
+                                if (resId != 0 && !xmlResIds.contains(resId)) {
                                     xmlResIds.add(resId)
                                 }
                             }
                         }
                     }
                 } catch (e: Exception) {
-                    // Safe fallback
+                    // [app/src/main/java/com/silauncer/cepat/shortcut/ShortcutFetcher.kt]: Logging fallback metadata manifest
+                    // [Penjelasan]: Mencatat log kegagalan parsing metadata package info shortcuts
+                    android.util.Log.e("ShortcutFetcher", "Gagal membaca metadata activities untuk $packageName", e)
                 }
             }
 
@@ -123,10 +132,22 @@ object ShortcutFetcher {
 
                             var label: String? = null
                             if (shortLabelRes != 0) {
-                                try { label = appRes.getString(shortLabelRes) } catch (e: Exception) { null }
+                                try {
+                                    label = appRes.getString(shortLabelRes)
+                                } catch (e: Exception) {
+                                    // [app/src/main/java/com/silauncer/cepat/shortcut/ShortcutFetcher.kt]: Log resource string resolution failure
+                                    // [Penjelasan]: Mencatat kegagalan resolving shortLabel resource ID
+                                    android.util.Log.w("ShortcutFetcher", "Resource string shortLabel ID $shortLabelRes tidak ditemukan di $packageName")
+                                }
                             }
                             if (label.isNullOrBlank() && longLabelRes != 0) {
-                                try { label = appRes.getString(longLabelRes) } catch (e: Exception) { null }
+                                try {
+                                    label = appRes.getString(longLabelRes)
+                                } catch (e: Exception) {
+                                    // [app/src/main/java/com/silauncer/cepat/shortcut/ShortcutFetcher.kt]: Log resource string resolution failure
+                                    // [Penjelasan]: Mencatat kegagalan resolving longLabel resource ID
+                                    android.util.Log.w("ShortcutFetcher", "Resource string longLabel ID $longLabelRes tidak ditemukan di $packageName")
+                                }
                             }
                             if (label.isNullOrBlank()) {
                                 label = parser.getAttributeValue("http://schemas.android.com/apk/res/android", "shortcutShortLabel")
@@ -144,6 +165,9 @@ object ShortcutFetcher {
                                     try {
                                         appRes.getDrawable(iconRes, null)
                                     } catch (e2: Exception) {
+                                        // [app/src/main/java/com/silauncer/cepat/shortcut/ShortcutFetcher.kt]: Log resource drawable resolution failure
+                                        // [Penjelasan]: Mencatat kegagalan resolving drawable icon dari target package
+                                        android.util.Log.w("ShortcutFetcher", "Resource drawable icon ID $iconRes tidak ditemukan di $packageName", e2)
                                         null
                                     }
                                 }
@@ -197,7 +221,9 @@ object ShortcutFetcher {
                 }
             }
         } catch (e: Exception) {
-            // Safe fallback
+            // [app/src/main/java/com/silauncer/cepat/shortcut/ShortcutFetcher.kt]: Logging error parser shortcut XML
+            // [Penjelasan]: Mencatat kegagalan parsing shortcuts.xml dari package APK
+            android.util.Log.e("ShortcutFetcher", "Gagal parsing shortcuts XML untuk $packageName", e)
         }
         return result
     }
@@ -219,18 +245,10 @@ object ShortcutFetcher {
                 }
             }
         } catch (e: Exception) {
-            // Ignore exception
+            // [app/src/main/java/com/silauncer/cepat/shortcut/ShortcutFetcher.kt]: Logging error config shortcuts
+            // [Penjelasan]: Mencatat kegagalan getShortcutConfigActivityList
+            android.util.Log.e("ShortcutFetcher", "Gagal mengambil shortcut config activities untuk $packageName", e)
         }
         return emptyList()
-    }
-
-    // [app/src/main/java/com/silauncer/cepat/shortcut/ShortcutFetcher.kt]: Ekstraksi ResId Shortcut XML Metadata
-    // [Penjelasan]: Helper terpusat untuk membaca resource ID android.app.shortcuts dari metadata activity/package
-    private fun extractShortcutXmlResId(metaData: android.os.Bundle?): Int? {
-        if (metaData != null && metaData.containsKey("android.app.shortcuts")) {
-            val resId = metaData.getInt("android.app.shortcuts")
-            if (resId != 0) return resId
-        }
-        return null
     }
 }

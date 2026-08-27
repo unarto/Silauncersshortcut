@@ -19,6 +19,8 @@ class LauncherAppController(
     private val prefs: LauncherPreferences,
     private val repository: LauncherRepository
 ) {
+    // [app/src/main/java/com/silauncer/cepat/launcher/LauncherAppController.kt]: Fungsi Inisialisasi Aplikasi
+    // [Penjelasan]: Tidak ada duplikasi dengan refreshApps. loadAppsInitial memuat dari AppDataSource untuk sinkronisasi awal dan cache, sedangkan refreshApps hanya mengambil dari StateHolder (cache).
     suspend fun loadAppsInitial(): List<AppInfo> {
         migrateIfNeeded()
         val user = Process.myUserHandle()

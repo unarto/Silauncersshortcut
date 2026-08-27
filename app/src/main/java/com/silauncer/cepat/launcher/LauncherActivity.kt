@@ -1,5 +1,10 @@
 package com.silauncer.cepat.launcher
 
+import android.content.BroadcastReceiver
+import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
+import android.os.Build
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.activity.OnBackPressedCallback
@@ -15,9 +20,8 @@ import com.silauncer.cepat.home.AppAdapter
 import com.silauncer.cepat.home.MaterialGridItemAnimator
 import com.silauncer.cepat.home.OverScroll
 import com.silauncer.cepat.storage.LauncherPreferences
-import com.silauncer.cepat.notification.NotificationStateManager
-import com.silauncer.cepat.util.dpToPx
-import kotlinx.coroutines.flow.collectLatest
+import com.silauncer.cepat.notification.NotificationItem
+import com.silauncer.cepat.notification.NotificationService
 import kotlinx.coroutines.launch
 
 class LauncherActivity : AppCompatActivity() {
@@ -32,6 +36,40 @@ class LauncherActivity : AppCompatActivity() {
     private lateinit var dragHandler: GridDragAndDropHandler
     
     private var isLoaded = false
+    private val appNotifications = mutableMapOf<String, List<NotificationItem>>()
+
+    // [app/src/main/java/com/silauncer/cepat/launcher/LauncherActivity.kt]: Receiver Update Notifikasi
+    // [Penjelasan]: Menerima broadcast notifikasi langsung dari NotificationService tanpa perantara Global State
+    private val notificationUpdateReceiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context?, intent: Intent?) {
+            if (intent?.action == NotificationService.ACTION_NOTIFICATION_UPDATE) {
+                val extras = intent.extras ?: return
+                val newMap = mutableMapOf<String, List<NotificationItem>>()
+                val counts = mutableMapOf<String, Int>()
+                
+                for (key in extras.keySet()) {
+                    @Suppress("DEPRECATION")
+                    val items = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                        extras.getParcelableArrayList(key, NotificationItem::class.java)
+                    } else {
+                        extras.getParcelableArrayList(key)
+                    }
+                    if (items != null) {
+                        newMap[key] = items
+                        counts[key] = items.size
+                    }
+                }
+                
+                appNotifications.clear()
+                appNotifications.putAll(newMap)
+                adapter.updateNotifications(counts)
+            }
+        }
+    }
+
+    fun getNotificationsForPackage(packageName: String): List<NotificationItem> {
+        return appNotifications[packageName] ?: emptyList()
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -105,16 +143,17 @@ class LauncherActivity : AppCompatActivity() {
 
         loadAppsInitialUI()
         
-        lifecycleScope.launch {
-            NotificationStateManager.notifications.collectLatest { notifMap ->
-                val counts = notifMap.mapValues { it.value.size }
-                adapter.updateNotifications(counts)
-            }
-        }
+        // [app/src/main/java/com/silauncer/cepat/launcher/LauncherActivity.kt]: Registrasi Broadcast Receiver Notifikasi
+        // [Penjelasan]: Mendaftarkan receiver untuk menerima update notifikasi aplikasi secara aman dengan flag RECEIVER_NOT_EXPORTED
+        val filter = IntentFilter(NotificationService.ACTION_NOTIFICATION_UPDATE)
+        androidx.core.content.ContextCompat.registerReceiver(
+            this,
+            notificationUpdateReceiver,
+            filter,
+            androidx.core.content.ContextCompat.RECEIVER_NOT_EXPORTED
+        )
     }
 
-    // [app/src/main/java/com/silauncer/cepat/launcher/LauncherActivity.kt]: Sinkronisasi Pengaturan UI Real-Time
-    // [Penjelasan]: Memperbarui grid span count, konfigurasi adapter, dan memanggil requestLayout()/invalidate() saat kembali ke launcher
     override fun onResume() {
         super.onResume()
         if (recyclerView.layoutManager is GridLayoutManager) {
@@ -126,17 +165,24 @@ class LauncherActivity : AppCompatActivity() {
         val currentIconSizePx = dpToPx(prefs.iconSize)
         val currentSpacingPx = dpToPx(prefs.iconSpacing)
         adapter.updateConfig(currentIconSizePx, prefs.showAppLabel, prefs.labelSize, currentSpacingPx, prefs.gridRows, prefs.selectedIconPack)
-        recyclerView.requestLayout()
-        recyclerView.invalidate()
         
         if (isLoaded) {
             refreshAppsUI()
         }
     }
 
+    // [app/src/main/java/com/silauncer/cepat/launcher/LauncherActivity.kt]: Utilitas Konversi Satuan DP ke PX
+    // [Penjelasan]: Helper terpusat untuk menghitung konversi dimensi dp ke pixel berdasarkan kepadatan layar
+    private fun dpToPx(dp: Int): Int = (dp * resources.displayMetrics.density).toInt()
+
     override fun onDestroy() {
         super.onDestroy()
         appChangeReceiver.unregister(this)
+        try {
+            unregisterReceiver(notificationUpdateReceiver)
+        } catch (e: Exception) {
+            // Receiver mungkin belum terdaftar
+        }
     }
 
     private fun loadAppsInitialUI() {

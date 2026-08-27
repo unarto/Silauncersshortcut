@@ -1,5 +1,7 @@
 package com.silauncer.cepat.apps
 
+// [app/src/main/java/com/silauncer/cepat/apps/AppSorter.kt]: Pengurut Daftar Aplikasi
+// [Penjelasan]: Mengurutkan daftar aplikasi berdasarkan mode (A-Z, Z-A, atau urutan kustom Room DB)
 object AppSorter {
     fun sort(apps: List<AppInfo>, sortMode: String, customOrder: List<String> = emptyList()): List<AppInfo> {
         return when (sortMode) {

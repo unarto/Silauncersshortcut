@@ -4,6 +4,8 @@ import android.os.UserHandle
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 
+// [app/src/main/java/com/silauncer/cepat/apps/AppStateHolder.kt]: Penyimpan Status Aplikasi In-Memory
+// [Penjelasan]: Mengelola daftar aplikasi di memori secara thread-safe menggunakan Mutex
 class AppStateHolder {
     private val apps = ArrayList<AppInfo>()
     private val mutex = Mutex()

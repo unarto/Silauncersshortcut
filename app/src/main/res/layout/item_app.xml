@@ -20,7 +20,6 @@
             android:layout_width="@dimen/app_icon_default_size"
             android:layout_height="@dimen/app_icon_default_size"
             android:background="@drawable/bg_app_icon"
-            android:clipToOutline="true"
             android:scaleType="fitCenter"
             android:contentDescription="@string/app_name" />
 

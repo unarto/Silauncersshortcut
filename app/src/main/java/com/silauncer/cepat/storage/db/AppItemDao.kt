@@ -14,9 +14,6 @@ interface AppItemDao {
     suspend fun getAllItems(): List<AppItemEntity>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertItem(item: AppItemEntity)
-
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertAll(items: List<AppItemEntity>)
 
     @Query("DELETE FROM app_items WHERE packageName = :packageName")

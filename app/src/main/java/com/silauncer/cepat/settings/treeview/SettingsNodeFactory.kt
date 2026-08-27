@@ -9,21 +9,13 @@ import com.silauncer.cepat.apps.AppInfo
 import com.silauncer.cepat.cache.IconCache
 import com.silauncer.cepat.iconpack.IconPackRepository
 import com.silauncer.cepat.storage.LauncherPreferences
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 // [app/src/main/java/com/silauncer/cepat/settings/treeview/SettingsNodeFactory.kt]: Pabrik pembuat struktur TreeView Multi-Level
 // [Penjelasan]: Membangun seluruh hirarki vertikal settings (zero dialog/popup) dari LauncherPreferences dan Context
 object SettingsNodeFactory {
-
-    const val SLIDER_COLUMNS_MIN = 3f
-    const val SLIDER_COLUMNS_MAX = 8f
-    const val SLIDER_ROWS_MIN = 3f
-    const val SLIDER_ROWS_MAX = 10f
-    const val SLIDER_SPACING_MIN = 0f
-    const val SLIDER_SPACING_MAX = 48f
-    const val SLIDER_ICON_SIZE_MIN = 32f
-    const val SLIDER_ICON_SIZE_MAX = 96f
-    const val SLIDER_LABEL_SIZE_MIN = 8f
-    const val SLIDER_LABEL_SIZE_MAX = 24f
 
     // [app/src/main/java/com/silauncer/cepat/settings/treeview/SettingsNodeFactory.kt]: Penerapan Bahasa Aplikasi
     // [Penjelasan]: Mengubah locale aplikasi secara langsung menggunakan AppCompatDelegate setApplicationLocales
@@ -65,8 +57,8 @@ object SettingsNodeFactory {
                     nodeType = NodeType.SLIDER,
                     depth = 1,
                     value = prefs.gridColumns.toFloat(),
-                    sliderMin = SLIDER_COLUMNS_MIN,
-                    sliderMax = SLIDER_COLUMNS_MAX,
+                    sliderMin = 3f,
+                    sliderMax = 8f,
                     sliderStep = 1f,
                     onSliderChange = { value ->
                         prefs.gridColumns = value.toInt()
@@ -78,8 +70,8 @@ object SettingsNodeFactory {
                     nodeType = NodeType.SLIDER,
                     depth = 1,
                     value = prefs.gridRows.toFloat(),
-                    sliderMin = SLIDER_ROWS_MIN,
-                    sliderMax = SLIDER_ROWS_MAX,
+                    sliderMin = 3f,
+                    sliderMax = 10f,
                     sliderStep = 1f,
                     onSliderChange = { value ->
                         prefs.gridRows = value.toInt()
@@ -91,8 +83,8 @@ object SettingsNodeFactory {
                     nodeType = NodeType.SLIDER,
                     depth = 1,
                     value = prefs.iconSpacing.toFloat(),
-                    sliderMin = SLIDER_SPACING_MIN,
-                    sliderMax = SLIDER_SPACING_MAX,
+                    sliderMin = 0f,
+                    sliderMax = 48f,
                     sliderStep = 2f,
                     onSliderChange = { value ->
                         prefs.iconSpacing = value.toInt()
@@ -173,8 +165,8 @@ object SettingsNodeFactory {
                     nodeType = NodeType.SLIDER,
                     depth = 1,
                     value = prefs.iconSize.toFloat(),
-                    sliderMin = SLIDER_ICON_SIZE_MIN,
-                    sliderMax = SLIDER_ICON_SIZE_MAX,
+                    sliderMin = 32f,
+                    sliderMax = 96f,
                     sliderStep = 4f,
                     onSliderChange = { value ->
                         prefs.iconSize = value.toInt()
@@ -197,8 +189,8 @@ object SettingsNodeFactory {
                     nodeType = NodeType.SLIDER,
                     depth = 1,
                     value = prefs.labelSize,
-                    sliderMin = SLIDER_LABEL_SIZE_MIN,
-                    sliderMax = SLIDER_LABEL_SIZE_MAX,
+                    sliderMin = 8f,
+                    sliderMax = 24f,
                     sliderStep = 1f,
                     onSliderChange = { value ->
                         prefs.labelSize = value
@@ -309,18 +301,10 @@ object SettingsNodeFactory {
         val hiddenAppNodes = sortedApps.map { app ->
             val pkg = app.componentName.packageName
             val isHidden = hiddenSet.contains(pkg)
-            // [app/src/main/java/com/silauncer/cepat/settings/treeview/SettingsNodeFactory.kt]: Pemuatan Ikon Terpadu
-            // [Penjelasan]: Mengutamakan IconCache dan Icon Pack aktif sebelum memanggil Package Manager OS
-            val appIcon = IconCache.get(app.cacheKey) ?: run {
-                val iconPack = prefs.selectedIconPack
-                val packIcon = if (iconPack.isNotEmpty()) {
-                    IconPackRepository.getIcon(context, iconPack, app.componentName)
-                } else null
-                packIcon ?: try {
-                    pm.getActivityIcon(app.componentName)
-                } catch (e: Exception) {
-                    null
-                }
+            val appIcon = IconCache.get(app.cacheKey) ?: try {
+                pm.getActivityIcon(app.componentName)
+            } catch (e: Exception) {
+                null
             }
             TreeNode(
                 id = "hidden_app_$pkg",
@@ -376,9 +360,18 @@ object SettingsNodeFactory {
                     nodeType = NodeType.ACTION,
                     depth = 1,
                     onAction = {
+                        // [app/src/main/java/com/silauncer/cepat/settings/treeview/SettingsNodeFactory.kt]: Reset Layout Sinkron MMKV & Room DB
+                        // [Penjelasan]: Menghapus seluruh data urutan di Room DB dan mereset preferensi MMKV agar sinkron
                         prefs.resetToDefaults()
                         applyAppLanguage("system")
                         IconCache.clear()
+                        CoroutineScope(Dispatchers.IO).launch {
+                            try {
+                                com.silauncer.cepat.storage.db.LauncherDatabase.getDatabase(context).appItemDao().deleteAll()
+                            } catch (e: Exception) {
+                                android.util.Log.e("SettingsNodeFactory", "Gagal membersihkan room database saat reset", e)
+                            }
+                        }
                         Toast.makeText(
                             context,
                             context.getString(R.string.pref_reset_layout_success),

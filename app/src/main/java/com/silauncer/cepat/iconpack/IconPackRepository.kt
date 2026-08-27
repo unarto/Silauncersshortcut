@@ -10,14 +10,10 @@ import java.util.concurrent.ConcurrentHashMap
 
 data class IconPackInfo(val packageName: String, val label: String)
 
-// [app/src/main/java/com/silauncer/cepat/iconpack/IconPackRepository.kt]: Repositori Icon Pack Standar AOSP/Nova/ADW
-// [Penjelasan]: Mengelola deteksi paket ikon pihak ketiga dan parsing pemetaan appfilter.xml secara aman
 object IconPackRepository {
     private val componentToDrawableName = ConcurrentHashMap<String, String>()
     private var loadedIconPack: String? = null
 
-    // [app/src/main/java/com/silauncer/cepat/iconpack/IconPackRepository.kt]: Pemindaian Icon Pack
-    // [Penjelasan]: Mengambil daftar Icon Pack yang terpasang di sistem menggunakan intent filter standar launcher
     fun getAvailableIconPacks(context: Context): List<IconPackInfo> {
         val pm = context.packageManager
         val iconPacks = mutableMapOf<String, IconPackInfo>()
@@ -41,7 +37,9 @@ object IconPackRepository {
                     }
                 }
             } catch (e: Exception) {
-                // Ignore exception if query fails
+                // [app/src/main/java/com/silauncer/cepat/iconpack/IconPackRepository.kt]: Logging query icon pack
+                // [Penjelasan]: Mencatat log kegagalan query paket icon pack pihak ketiga
+                android.util.Log.e("IconPackRepository", "Gagal query intent icon pack: ${intent.action}", e)
             }
         }
 
@@ -78,7 +76,9 @@ object IconPackRepository {
                 }
             }
         } catch (e: Exception) {
-            // Ignore error, might not have appfilter.xml
+            // [app/src/main/java/com/silauncer/cepat/iconpack/IconPackRepository.kt]: Logging parsing appfilter.xml
+            // [Penjelasan]: Mencatat log kegagalan parsing appfilter.xml pada icon pack
+            android.util.Log.e("IconPackRepository", "Gagal parse appfilter.xml untuk icon pack $iconPackPackage", e)
         }
         loadedIconPack = iconPackPackage
     }
@@ -110,7 +110,9 @@ object IconPackRepository {
             }
             
         } catch (e: Exception) {
-            // Fallback if unable to read from pack
+            // [app/src/main/java/com/silauncer/cepat/iconpack/IconPackRepository.kt]: Logging load resource drawable icon pack
+            // [Penjelasan]: Mencatat log kegagalan membaca resource drawable dari icon pack
+            android.util.Log.e("IconPackRepository", "Gagal memuat ikon $componentName dari icon pack $iconPackPackage", e)
         }
         
         return null

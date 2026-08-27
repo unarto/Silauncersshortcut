@@ -14,8 +14,7 @@ import com.silauncer.cepat.apps.AppInfo
 import com.silauncer.cepat.shortcut.ShortcutFetcher
 import com.silauncer.cepat.shortcut.ShortcutLauncher
 import com.silauncer.cepat.shortcut.ShortcutParser
-import com.silauncer.cepat.notification.NotificationStateManager
-import com.silauncer.cepat.util.dpToPx
+import com.silauncer.cepat.launcher.LauncherActivity
 
 // [app/src/main/java/com/silauncer/cepat/popup/PopupController.kt]: Pengelola Lifecycle PopupWindow
 // [Penjelasan]: Mengontrol penampilan, animasi, penghitungan posisi, dan dismiss popup saat touch outside
@@ -28,7 +27,12 @@ class PopupController(private val context: Context) {
 
         // Fetch dynamic shortcuts
         val rawShortcuts = ShortcutFetcher.getShortcuts(context, appInfo.packageName, appInfo.user)
-        val parsedShortcuts = ShortcutParser.parseList(context, rawShortcuts).toMutableList()
+        
+        val parsedShortcuts = if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N_MR1) {
+            ShortcutParser.parseList(context, rawShortcuts).toMutableList()
+        } else {
+            mutableListOf()
+        }
         
         // If dynamic shortcuts are empty, check static manifest shortcuts from APK resources
         if (parsedShortcuts.isEmpty()) {
@@ -43,8 +47,9 @@ class PopupController(private val context: Context) {
 
         smartPopupView.setupShortcuts(parsedShortcuts)
         
-        // Fetch notifications
-        val notifications = NotificationStateManager.notifications.value[appInfo.packageName] ?: emptyList()
+        // [app/src/main/java/com/silauncer/cepat/popup/PopupController.kt]: Mengambil Data Notifikasi
+        // [Penjelasan]: Mengambil daftar notifikasi dari LauncherActivity lokal tanpa Global State/Manager
+        val notifications = (context as? LauncherActivity)?.getNotificationsForPackage(appInfo.packageName) ?: emptyList()
         smartPopupView.setupNotifications(notifications)
         
         // Filter System Actions visibility based on system app status
@@ -133,7 +138,9 @@ class PopupController(private val context: Context) {
         val location = IntArray(2)
         targetView.getLocationOnScreen(location)
         val targetCenterX = location[0] + targetView.width / 2
-        val arrowWidth = context.resources.getDimension(R.dimen.popup_arrow_width)
+        // [app/src/main/java/com/silauncer/cepat/popup/PopupController.kt]: Lebar panah indikator popup
+        // [Penjelasan]: Menggunakan resource dimensi popup_arrow_width tanpa perhitungan hardcoded
+        val arrowWidth = context.resources.getDimensionPixelSize(R.dimen.popup_arrow_width).toFloat()
         val rawArrowOffset = (targetCenterX - pos.x) - (arrowWidth / 2)
         val minArrowX = marginPx.toFloat()
         val maxArrowX = (popupWidth - arrowWidth - marginPx).coerceAtLeast(minArrowX)
@@ -156,7 +163,9 @@ class PopupController(private val context: Context) {
             }
             context.startActivity(intent)
         } catch (e: Exception) {
-            // Safe fallback
+            // [app/src/main/java/com/silauncer/cepat/popup/PopupController.kt]: Error handling App Info
+            // [Penjelasan]: Menambahkan feedback visual berupa Toast saat intent detail aplikasi gagal dibuka, menghindari silent error.
+            android.widget.Toast.makeText(context, context.getString(R.string.error_cannot_open_app, packageName), android.widget.Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -171,19 +180,19 @@ class PopupController(private val context: Context) {
             }
             context.startActivity(intent)
         } catch (e: Exception) {
-            // Safe fallback
+            // [app/src/main/java/com/silauncer/cepat/popup/PopupController.kt]: Error handling Uninstall App
+            // [Penjelasan]: Menampilkan Toast ketika intent penghapusan aplikasi tidak dapat diproses.
+            android.widget.Toast.makeText(context, context.getString(R.string.error_cannot_open_app, packageName), android.widget.Toast.LENGTH_SHORT).show()
         }
     }
 
-    // [app/src/main/java/com/silauncer/cepat/popup/PopupController.kt]: Aksi Bagikan Tautan Aplikasi
-    // [Penjelasan]: Menggunakan string format resmi url_play_store_format dari strings.xml untuk tautan Google Play Store
     private fun shareApp(packageName: String) {
         try {
             val shareIntent = Intent(Intent.ACTION_SEND).apply {
                 type = "text/plain"
                 putExtra(
                     Intent.EXTRA_TEXT,
-                    context.getString(R.string.url_play_store_format, packageName)
+                    "https://play.google.com/store/apps/details?id=$packageName"
                 )
                 addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             }
@@ -191,7 +200,9 @@ class PopupController(private val context: Context) {
                 addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             })
         } catch (e: Exception) {
-            // Safe fallback
+            // [app/src/main/java/com/silauncer/cepat/popup/PopupController.kt]: Error handling Share App
+            // [Penjelasan]: Menampilkan Toast ketika fitur bagi aplikasi (share intent) mengalami kegagalan.
+            android.widget.Toast.makeText(context, context.getString(R.string.error_cannot_open_app, packageName), android.widget.Toast.LENGTH_SHORT).show()
         }
     }
 }

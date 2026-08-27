@@ -181,7 +181,9 @@ class LauncherActivity : AppCompatActivity() {
         try {
             unregisterReceiver(notificationUpdateReceiver)
         } catch (e: Exception) {
-            // Receiver mungkin belum terdaftar
+            // [app/src/main/java/com/silauncer/cepat/launcher/LauncherActivity.kt]: Log unregisterReceiver Error
+            // [Penjelasan]: Mencatat peringatan jika unregisterReceiver gagal karena receiver mungkin belum terdaftar
+            android.util.Log.w("LauncherActivity", "Gagal unregister notificationUpdateReceiver (mungkin belum terdaftar)", e)
         }
     }
 

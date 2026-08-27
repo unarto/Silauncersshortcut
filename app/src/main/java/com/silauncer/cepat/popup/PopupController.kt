@@ -60,7 +60,9 @@ class PopupController(private val context: Context) {
             isSystemApp = (aInfo.flags and android.content.pm.ApplicationInfo.FLAG_SYSTEM) != 0 || 
                           (aInfo.flags and android.content.pm.ApplicationInfo.FLAG_UPDATED_SYSTEM_APP) != 0
         } catch (e: Exception) {
-            // Ignore
+            // [app/src/main/java/com/silauncer/cepat/popup/PopupController.kt]: Log System App Identification Error
+            // [Penjelasan]: Mencatat peringatan jika pengecekan status aplikasi sistem gagal (misal: package tidak ditemukan)
+            android.util.Log.w("PopupController", "Gagal mengecek status system app untuk ${appInfo.packageName}", e)
         }
         val showUninstall = !isSystemApp
         val showShare = !isSystemApp

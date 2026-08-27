@@ -11,6 +11,16 @@ import java.util.concurrent.ConcurrentHashMap
 data class IconPackInfo(val packageName: String, val label: String)
 
 object IconPackRepository {
+
+    // [app/src/main/java/com/silauncer/cepat/iconpack/IconPackRepository.kt]: Konstanta Resource XML
+    // [Penjelasan]: Menghindari string hardcoded saat parsing metadata icon pack
+    private const val RES_TYPE_XML = "xml"
+    private const val RES_TYPE_DRAWABLE = "drawable"
+    private const val FILE_APPFILTER = "appfilter"
+    private const val TAG_ITEM = "item"
+    private const val ATTR_COMPONENT = "component"
+    private const val ATTR_DRAWABLE = "drawable"
+
     private val componentToDrawableName = ConcurrentHashMap<String, String>()
     private var loadedIconPack: String? = null
 
@@ -60,14 +70,14 @@ object IconPackRepository {
             val res = pm.getResourcesForApplication(iconPackPackage)
             
             // Third-party icon packs map components to drawables in res/xml/appfilter.xml
-            val appFilterId = res.getIdentifier("appfilter", "xml", iconPackPackage)
+            val appFilterId = res.getIdentifier(FILE_APPFILTER, RES_TYPE_XML, iconPackPackage)
             if (appFilterId != 0) {
                 val parser = res.getXml(appFilterId)
                 var eventType = parser.eventType
                 while (eventType != XmlPullParser.END_DOCUMENT) {
-                    if (eventType == XmlPullParser.START_TAG && parser.name == "item") {
-                        val component = parser.getAttributeValue(null, "component")
-                        val drawable = parser.getAttributeValue(null, "drawable")
+                    if (eventType == XmlPullParser.START_TAG && parser.name == TAG_ITEM) {
+                        val component = parser.getAttributeValue(null, ATTR_COMPONENT)
+                        val drawable = parser.getAttributeValue(null, ATTR_DRAWABLE)
                         if (component != null && drawable != null) {
                             componentToDrawableName[component] = drawable
                         }
@@ -97,14 +107,14 @@ object IconPackRepository {
             val res = pm.getResourcesForApplication(iconPackPackage)
             
             if (drawableName != null) {
-                val resId = res.getIdentifier(drawableName, "drawable", iconPackPackage)
+                val resId = res.getIdentifier(drawableName, RES_TYPE_DRAWABLE, iconPackPackage)
                 if (resId != 0) {
                     return res.getDrawable(resId, null)
                 }
             }
             
             // Fallback for some OEM packs or generic matching: try using the package name or class name directly
-            val fallbackResId = res.getIdentifier(componentName.packageName.replace(".", "_"), "drawable", iconPackPackage)
+            val fallbackResId = res.getIdentifier(componentName.packageName.replace(".", "_"), RES_TYPE_DRAWABLE, iconPackPackage)
             if (fallbackResId != 0) {
                 return res.getDrawable(fallbackResId, null)
             }

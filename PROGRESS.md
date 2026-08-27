@@ -13,3 +13,5 @@
 | Unit Test Suite | SELESAI | PASS | `:app:testDebugUnitTest` 100% PASS |
 | Android Lint Validation | SELESAI | PASS | `:app:lintDebug` 0 errors |
 | Perbaikan Audit Modul Shortcut Pintar (shortcut.md) | SELESAI | PASS | Pembersihan dead code picker, eliminasi silent catch, refaktor XML konstanta |
+| Perbaikan Tangkapan Senyap (audit3.md) | SELESAI | PASS | Menambahkan Log.w pada `PopupController.kt` dan `LauncherActivity.kt` |
+| Pembersihan Hardcoded String (audit3.md) | SELESAI | PASS | Ekstraksi konstan di `SettingsNodeFactory.kt` & `IconPackRepository.kt` |

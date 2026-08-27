@@ -17,10 +17,21 @@ import kotlinx.coroutines.launch
 // [Penjelasan]: Membangun seluruh hirarki vertikal settings (zero dialog/popup) dari LauncherPreferences dan Context
 object SettingsNodeFactory {
 
+    // [app/src/main/java/com/silauncer/cepat/settings/treeview/SettingsNodeFactory.kt]: Konstanta Preferensi
+    // [Penjelasan]: Menghindari string hardcoded untuk kode bahasa dan pengurutan
+    const val PREF_LANG_SYSTEM = "system"
+    const val PREF_LANG_IN = "in"
+    const val PREF_LANG_EN = "en"
+    const val PREF_LANG_ID = "id"
+
+    const val PREF_SORT_AZ = "a_z"
+    const val PREF_SORT_ZA = "z_a"
+    const val PREF_SORT_CUSTOM = "custom"
+
     // [app/src/main/java/com/silauncer/cepat/settings/treeview/SettingsNodeFactory.kt]: Penerapan Bahasa Aplikasi
     // [Penjelasan]: Mengubah locale aplikasi secara langsung menggunakan AppCompatDelegate setApplicationLocales
     fun applyAppLanguage(languageCode: String) {
-        val localeList = if (languageCode == "system" || languageCode.isEmpty()) {
+        val localeList = if (languageCode == PREF_LANG_SYSTEM || languageCode.isEmpty()) {
             LocaleListCompat.getEmptyLocaleList()
         } else {
             LocaleListCompat.forLanguageTags(languageCode)
@@ -205,20 +216,20 @@ object SettingsNodeFactory {
         // ==========================================
         val currentLangCode = prefs.appLanguage
         val currentLangDisplay = when (currentLangCode) {
-            "in", "id" -> context.getString(R.string.pref_lang_indonesian)
-            "en" -> context.getString(R.string.pref_lang_english)
+            PREF_LANG_IN, PREF_LANG_ID -> context.getString(R.string.pref_lang_indonesian)
+            PREF_LANG_EN -> context.getString(R.string.pref_lang_english)
             else -> context.getString(R.string.pref_lang_system_default)
         }
 
         val languageChoices = listOf(
-            Triple("choice_lang_system", context.getString(R.string.pref_lang_system_default), "system"),
-            Triple("choice_lang_in", context.getString(R.string.pref_lang_indonesian), "in"),
-            Triple("choice_lang_en", context.getString(R.string.pref_lang_english), "en")
+            Triple("choice_lang_system", context.getString(R.string.pref_lang_system_default), PREF_LANG_SYSTEM),
+            Triple("choice_lang_in", context.getString(R.string.pref_lang_indonesian), PREF_LANG_IN),
+            Triple("choice_lang_en", context.getString(R.string.pref_lang_english), PREF_LANG_EN)
         ).map { (id, label, code) ->
             val isSelected = when (code) {
-                "system" -> (currentLangCode == "system" || currentLangCode.isEmpty())
-                "in" -> (currentLangCode == "in" || currentLangCode == "id")
-                "en" -> (currentLangCode == "en")
+                PREF_LANG_SYSTEM -> (currentLangCode == PREF_LANG_SYSTEM || currentLangCode.isEmpty())
+                PREF_LANG_IN -> (currentLangCode == PREF_LANG_IN || currentLangCode == PREF_LANG_ID)
+                PREF_LANG_EN -> (currentLangCode == PREF_LANG_EN)
                 else -> false
             }
             TreeNode(
@@ -263,15 +274,15 @@ object SettingsNodeFactory {
         // ==========================================
         val sortModeCode = prefs.sortMode
         val currentSortDisplay = when (sortModeCode) {
-            "z_a" -> context.getString(R.string.pref_sort_za)
-            "custom" -> context.getString(R.string.pref_sort_custom)
+            PREF_SORT_ZA -> context.getString(R.string.pref_sort_za)
+            PREF_SORT_CUSTOM -> context.getString(R.string.pref_sort_custom)
             else -> context.getString(R.string.pref_sort_az)
         }
 
         val sortChoices = listOf(
-            Triple("choice_sort_az", context.getString(R.string.pref_sort_az), "a_z"),
-            Triple("choice_sort_za", context.getString(R.string.pref_sort_za), "z_a"),
-            Triple("choice_sort_custom", context.getString(R.string.pref_sort_custom), "custom")
+            Triple("choice_sort_az", context.getString(R.string.pref_sort_az), PREF_SORT_AZ),
+            Triple("choice_sort_za", context.getString(R.string.pref_sort_za), PREF_SORT_ZA),
+            Triple("choice_sort_custom", context.getString(R.string.pref_sort_custom), PREF_SORT_CUSTOM)
         ).map { (id, label, mode) ->
             TreeNode(
                 id = id,
@@ -363,7 +374,7 @@ object SettingsNodeFactory {
                         // [app/src/main/java/com/silauncer/cepat/settings/treeview/SettingsNodeFactory.kt]: Reset Layout Sinkron MMKV & Room DB
                         // [Penjelasan]: Menghapus seluruh data urutan di Room DB dan mereset preferensi MMKV agar sinkron
                         prefs.resetToDefaults()
-                        applyAppLanguage("system")
+                        applyAppLanguage(PREF_LANG_SYSTEM)
                         IconCache.clear()
                         CoroutineScope(Dispatchers.IO).launch {
                             try {

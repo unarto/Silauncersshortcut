@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- [app/src/main/res/layout/item_app.xml]: Layout Sel Ikon Aplikasi -->
+<!-- [Penjelasan]: Mengatur pemusatan vertikal dan horizontal seimbang pada sel grid agar distribusi jarak antar ikon merata dan proporsional tanpa mengubah ukuran ikon default -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:gravity="center_horizontal|top"
+    android:gravity="center"
     android:orientation="vertical"
     android:clipChildren="false"
     android:clipToPadding="false"
@@ -48,9 +50,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ellipsize="end"
-        android:gravity="center_horizontal|top"
+        android:gravity="center_horizontal"
         android:maxLines="2"
-        android:minLines="2"
         android:textColor="@android:color/white"
         android:shadowColor="@color/text_shadow"
         android:shadowDx="1"

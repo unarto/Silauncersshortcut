@@ -44,7 +44,7 @@ object ShortcutLauncher {
                 // [app/src/main/java/com/silauncer/cepat/shortcut/ShortcutLauncher.kt]: Toast Peringatan SecurityException
                 // [Penjelasan]: Menampilkan peringatan Toast kepada pengguna agar tidak terjadi "harapan palsu" tanpa respon
                 android.util.Log.e("ShortcutLauncher", "SecurityException saat directIntent: ${shortcut.id}", e)
-                android.widget.Toast.makeText(context, "Silauncer harus menjadi Default Launcher", android.widget.Toast.LENGTH_SHORT).show()
+                android.widget.Toast.makeText(context, context.getString(com.silauncer.cepat.R.string.error_not_default_launcher), android.widget.Toast.LENGTH_SHORT).show()
                 false
             } catch (e: Exception) {
                 // [app/src/main/java/com/silauncer/cepat/shortcut/ShortcutLauncher.kt]: Log kegagalan Direct Intent

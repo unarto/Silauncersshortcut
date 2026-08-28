@@ -20,12 +20,14 @@ class LauncherPreferences {
         private const val KEY_SELECTED_ICON_PACK = "selected_icon_pack"
         private const val KEY_APP_LANGUAGE = "app_language"
 
+        // [app/src/main/java/com/silauncer/cepat/storage/LauncherPreferences.kt]: Nilai Konfigurasi Bawaan Launcher
+        // [Penjelasan]: Mengatur nilai default kolom=5, baris=5, ukuran ikon=40, dan ukuran teks label=10f
         const val DEFAULT_GRID_COLUMNS = 5
-        const val DEFAULT_GRID_ROWS = 6
-        const val DEFAULT_ICON_SIZE = 56
+        const val DEFAULT_GRID_ROWS = 5
+        const val DEFAULT_ICON_SIZE = 40
         const val DEFAULT_SORT_MODE = "a_z"
         const val DEFAULT_SHOW_APP_LABEL = true
-        const val DEFAULT_LABEL_SIZE = 12f
+        const val DEFAULT_LABEL_SIZE = 10f
         const val DEFAULT_ICON_SPACING = 4
         const val DEFAULT_APP_LANGUAGE = "system"
     }

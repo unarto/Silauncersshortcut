@@ -3,7 +3,6 @@ package com.silauncer.cepat.home
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.ViewTreeObserver
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.DiffUtil
@@ -39,33 +38,6 @@ class AppAdapter(
                 notifyItemChanged(index, "badge")
             }
         }
-    }
-    private var recyclerView: RecyclerView? = null
-    private var lastHeight = 0
-
-    private val layoutListener = ViewTreeObserver.OnGlobalLayoutListener {
-        val rv = recyclerView ?: return@OnGlobalLayoutListener
-        val newHeight = rv.measuredHeight
-        if (newHeight > 0 && newHeight != lastHeight) {
-            lastHeight = newHeight
-            rv.post {
-                if (recyclerView != null) {
-                    notifyDataSetChanged()
-                }
-            }
-        }
-    }
-
-    override fun onAttachedToRecyclerView(recyclerView: RecyclerView) {
-        super.onAttachedToRecyclerView(recyclerView)
-        this.recyclerView = recyclerView
-        recyclerView.viewTreeObserver.addOnGlobalLayoutListener(layoutListener)
-    }
-
-    override fun onDetachedFromRecyclerView(recyclerView: RecyclerView) {
-        super.onDetachedFromRecyclerView(recyclerView)
-        recyclerView.viewTreeObserver.removeOnGlobalLayoutListener(layoutListener)
-        this.recyclerView = null
     }
 
     override fun onViewRecycled(holder: AppViewHolder) {
@@ -161,14 +133,11 @@ class AppAdapter(
         }
 
         fun bind(app: AppInfo) {
-            val rv = recyclerView
-            if (rv != null && lastHeight > 0) {
-                val availableHeight = lastHeight - rv.paddingTop - rv.paddingBottom
-                val cellHeight = availableHeight / gridRows
-                if (itemView.layoutParams.height != cellHeight) {
-                    itemView.layoutParams = itemView.layoutParams.apply {
-                        height = cellHeight
-                    }
+            // [app/src/main/java/com/silauncer/cepat/home/AppAdapter.kt]: Tata Letak Sel dan Spacing Ikon
+            // [Penjelasan]: Menggunakan wrap_content alami dengan padding terkontrol agar jarak vertikal dan horizontal antar ikon proporsional dan tidak meregang berlebihan
+            if (itemView.layoutParams.height != ViewGroup.LayoutParams.WRAP_CONTENT) {
+                itemView.layoutParams = itemView.layoutParams.apply {
+                    height = ViewGroup.LayoutParams.WRAP_CONTENT
                 }
             }
             

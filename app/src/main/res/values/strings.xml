@@ -10,6 +10,7 @@
     <string name="error_app_not_found">Aplikasi tidak ditemukan: %1$s</string>
     <string name="error_cannot_open_app">Tidak dapat membuka aplikasi: %1$s</string>
     <string name="error_settings_crash">Terjadi kesalahan pengaturan: %1$s</string>
+    <string name="error_not_default_launcher">Silauncer harus menjadi Default Launcher</string>
 
     <string name="format_grid">%1$dx%2$d</string>
 

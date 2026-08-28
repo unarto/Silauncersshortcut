@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- [app/src/main/res/layout/activity_launcher.xml]: Layout Utama Launcher -->
+<!-- [Penjelasan]: Menampung RecyclerView kisi aplikasi dengan padding sistem yang proporsional dan seimbang -->
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -10,7 +12,8 @@
         android:layout_height="match_parent"
         android:clipToPadding="false"
         android:clipChildren="false"
-        android:paddingTop="@dimen/spacing_large"
-        android:paddingBottom="@dimen/spacing_huge" />
+        android:paddingHorizontal="@dimen/spacing_micro"
+        android:paddingTop="@dimen/spacing_small"
+        android:paddingBottom="@dimen/spacing_large" />
 
 </FrameLayout>

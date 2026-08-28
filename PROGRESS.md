@@ -17,3 +17,8 @@
 | Perbaikan Tangkapan Senyap (audit3.md) | SELESAI | PASS | Menambahkan Log.w pada `PopupController.kt` dan `LauncherActivity.kt` |
 | Pembersihan Hardcoded String (audit3.md) | SELESAI | PASS | Ekstraksi konstan di `SettingsNodeFactory.kt` & `IconPackRepository.kt` |
 | Perbaikan Tampilan Laci Aplikasi (auditpengaturan.md) | SELESAI | PASS | Memperbaiki UI TreeView squished dengan batas maxWidth dan penyederhanaan UX string |
+| Konfigurasi Pengaturan Bawaan (Default Grid & Ikon) | SELESAI | PASS | Menyesuaikan nilai default kolom 5, baris 5, ukuran ikon 40dp, dan ukuran teks label 10sp |
+| Pembersihan Hardcoded String di ShortcutLauncher | SELESAI | PASS | Mengekstrak string peringatan Toast "Default Launcher" ke strings.xml untuk lokalisasi |
+| Penyelarasan Jarak & Spacing Antar Ikon Grid | SELESAI | PASS | Mengubah pemusatan item ke `gravity=center`, menghapus minLines=2 penahan ruang kosong, dan menyeimbangkan padding RecyclerView tanpa mengubah ukuran default ikon |
+| Perbaikan Jarak Antar Ikon & Eliminasi Stretch Vertikal | SELESAI | PASS | Menghapus pembagian tinggi sel buatan (availableHeight/gridRows) di AppAdapter, menggunakan wrap_content alami dengan padding terkontrol berbasis iconSpacing |
+| Pemicu Build Ulang dan Instalasi Preview | SELESAI | PASS | Rebuild trigger dan kompilasi APK untuk instalasi pratinjau emulator streaming |

@@ -23,8 +23,8 @@
     <dimen name="stroke_width_thin">1dp</dimen>
     
     <!-- [app/src/main/res/values/dimens.xml]: Ukuran ikon dan kontainer -->
-    <!-- [Penjelasan]: Dimensi visual ikon dan tombol aksi -->
-    <dimen name="app_icon_default_size">56dp</dimen>
+    <!-- [Penjelasan]: Dimensi visual default ikon dan tombol aksi disesuaikan ke 40dp -->
+    <dimen name="app_icon_default_size">40dp</dimen>
     <dimen name="icon_container_size">40dp</dimen>
     <dimen name="icon_inner_size">24dp</dimen>
     <dimen name="chevron_size">20dp</dimen>
@@ -36,14 +36,14 @@
     <dimen name="subparent_corner_radius">12dp</dimen>
     
     <!-- [app/src/main/res/values/dimens.xml]: Ukuran teks (SP) -->
-    <!-- [Penjelasan]: Skala tipografi teks antarmuka -->
+    <!-- [Penjelasan]: Skala tipografi teks antarmuka dengan label aplikasi default 10sp -->
     <dimen name="text_size_title">22sp</dimen>
     <dimen name="text_size_subtitle">13sp</dimen>
     <dimen name="text_size_parent_header">15sp</dimen>
     <dimen name="text_size_child_header">14sp</dimen>
     <dimen name="text_size_body_small">12sp</dimen>
     <dimen name="text_size_pill">13sp</dimen>
-    <dimen name="text_size_app_label">11sp</dimen>
+    <dimen name="text_size_app_label">10sp</dimen>
     
     <!-- [app/src/main/res/values/dimens.xml]: Elevasi & Touch Target -->
     <!-- [Penjelasan]: Nilai target sentuh minimum komponen -->
